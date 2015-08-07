@@ -8,9 +8,25 @@ Author: Jay Newton, Shaawin Vsingam
 */
 
 //initialise plugin
-function wpfa_init (){
-    
-}
+function wpfa_init(){
 
+}
 add_action ('init', 'wpfa_init');
+
+//calling this will insert and publish a basic test post
+function wpfa_test_post(){
+    //create a post
+    $post = array(
+        'post_name' => "test-post",
+        'post_title' => "Test Post",
+        'post_content' => "This is a test.",
+        'post_excerpt' => "test"
+    );
+
+    //insert post
+    $post_id = wp_insert_post($post);
+
+    //publish post
+    wp_publish_post($post_id);
+}
 ?>
