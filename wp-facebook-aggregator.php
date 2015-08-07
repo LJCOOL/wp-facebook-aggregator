@@ -9,7 +9,7 @@ Author: Jay Newton, Shaawin Vsingam
 
 //initialise plugin
 function wpfa_init(){
-
+    wpfa_test_post();
 }
 add_action ('init', 'wpfa_init');
 
