@@ -11,8 +11,3 @@ posts or pages made by adding the tag "[custom-facebook-feed]".
 which will in turn be the specific categories to be clicked on. Eg. RMIT Design
 Hub, RMIT CSIT, etc. In these pages we can add "[custom-facebook-feed]", which
 will essentially turn each page into something like separate Facebook pages.
-
-- Also, I am thinking of dumping the whole code from the existing open source
-one and then experimenting and removing what we don't need, rather than
-attempting to sift through blindly, which is proving to be very tedious.
-Have you already tried this?
