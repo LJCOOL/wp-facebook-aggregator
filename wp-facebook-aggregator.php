@@ -7,8 +7,8 @@ Version: 1.0.1
 Author: Jay Newton, Shaawin Vsingam
 */
 
+//initialise plugin
 function wpfa_init (){
-    //initialise plugin
     
 }
 
