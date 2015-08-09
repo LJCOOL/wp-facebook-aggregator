@@ -7,9 +7,12 @@ Version: 1.0.1
 Author: Jay Newton, Shaawin Vsingam
 */
 
+//include facebook php sdk
+require_once __DIR__ . '/vendor/autoload.php';
+
 //initialise plugin
 function wpfa_init(){
-    wpfa_test_post();
+
 }
 add_action ('init', 'wpfa_init');
 
