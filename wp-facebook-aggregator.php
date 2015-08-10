@@ -3,16 +3,49 @@
 Plugin Name: Wordpress Facebook Aggregator
 Plugin URI: http://github.com/LJCOOL/wp-facebook-aggregator
 Description: Pulls and displays posts from multiple Facebook pages.
-Version: 1.0.1
+Version: 1.0.2
 Author: Jay Newton, Shaawin Vsingam
 */
 
 //include facebook php sdk
 require_once __DIR__ . '/vendor/autoload.php';
 
+//definitions
+define("APP_ID", "");
+define("APP_SECRET", "");
+define("APP_TOKEN", "");
+
+//create fb object to make graph api calls
+function wpfa_init_fb($app_id, $app_secret){
+    $fb = new Facebook\Facebook([
+        'app_id' => $app_id,
+        'app_secret' => $app_secret,
+        'default_graph_version' => 'v2.4'
+    ]);
+    return $fb;
+}
+
+function wpfa_call_graph_api(){
+    $token = APP_TOKEN;
+    $fb = wpfa_init_fb(APP_ID, APP_SECRET);
+
+    try {
+        // Returns a `Facebook\FacebookResponse` object
+        $response = $fb->get('/488310257929059', $token);
+    } catch(Facebook\Exceptions\FacebookResponseException $e) {
+        echo 'Graph returned an error: ' . $e->getMessage();
+        exit;
+    } catch(Facebook\Exceptions\FacebookSDKException $e) {
+        echo 'Facebook SDK returned an error: ' . $e->getMessage();
+        exit;
+    }
+    //spew out page object
+    var_dump($response);
+}
+
 //initialise plugin
 function wpfa_init(){
-
+    wpfa_call_graph_api();
 }
 add_action ('init', 'wpfa_init');
 
