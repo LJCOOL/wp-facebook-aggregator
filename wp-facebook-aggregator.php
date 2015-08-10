@@ -31,7 +31,7 @@ function wpfa_call_graph_api(){
 
     try {
         // Returns a `Facebook\FacebookResponse` object
-        $response = $fb->get('/488310257929059', $token);
+        $response = $fb->get('/488310257929059/posts', $token);
     } catch(Facebook\Exceptions\FacebookResponseException $e) {
         echo 'Graph returned an error: ' . $e->getMessage();
         exit;
@@ -39,8 +39,13 @@ function wpfa_call_graph_api(){
         echo 'Facebook SDK returned an error: ' . $e->getMessage();
         exit;
     }
-    //spew out page object
-    var_dump($response);
+    //get the graph edge containing posts
+    $posts = $response->getGraphEdge();
+
+    //interate over each post (post is of type graphNode)
+    foreach ($posts as $post) {
+        wpfa_test_post($post['id'], $post['message']);
+    }
 }
 
 //initialise plugin
@@ -50,13 +55,13 @@ function wpfa_init(){
 add_action ('init', 'wpfa_init');
 
 //calling this will insert and publish a basic test post
-function wpfa_test_post(){
+function wpfa_test_post($id, $message){
     //create a post
     $post = array(
-        'post_name' => "test-post",
-        'post_title' => "Test Post",
-        'post_content' => "This is a test.",
-        'post_excerpt' => "test"
+        'post_name' => $id,
+        'post_title' => $id,
+        'post_content' => $message,
+        'post_excerpt' => $id
     );
 
     //insert post
