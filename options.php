@@ -1,4 +1,11 @@
 <?php
+/* Options vs Settings
+Becase Wordpress' APIs use both terms,
+For our sake we can define them as follows:
+OPTIONS refer to the whole page somewhat like an entity in itself.
+SETTINGS are the individual settings with the options page.
+*/
+
 //create custom plugin options menu
 add_action('admin_menu', 'feed_options');
 
@@ -17,7 +24,7 @@ function feed_options(){
 //defines attributes to be saved
 function register_options(){
     //register settings to be saved
-    register_setting('settings-group','option-name');
+    register_setting('settings-group','setting-name');
 }
 
 //HTML to generate page with forms, buttons etc.
