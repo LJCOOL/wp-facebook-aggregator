@@ -10,7 +10,7 @@ Author: Jay Newton, Shaawin Vsingam
 //include facebook php sdk
 require_once __DIR__ . '/vendor/autoload.php';
 
-//definitions
+//definitions for api keys
 define("APP_ID", "");
 define("APP_SECRET", "");
 define("APP_TOKEN", "");
@@ -31,7 +31,7 @@ function wpfa_call_graph_api(){
 
     try {
         // Returns a `Facebook\FacebookResponse` object
-        $response = $fb->get('/488310257929059/posts', $token);
+        $response = $fb->get('/123542974439976/posts', $token);
     } catch(Facebook\Exceptions\FacebookResponseException $e) {
         echo 'Graph returned an error: ' . $e->getMessage();
         exit;
@@ -42,26 +42,26 @@ function wpfa_call_graph_api(){
     //get the graph edge containing posts
     $posts = $response->getGraphEdge();
 
-    //interate over each post (post is of type graphNode)
+    //pull id and message content from each post (post is of type graphNode)
     foreach ($posts as $post) {
         wpfa_test_post($post['id'], $post['message']);
     }
 }
 
-//initialise plugin
-function wpfa_init(){
+//called when the plugin is activated
+function wpfa_activate(){
     wpfa_call_graph_api();
 }
-add_action ('init', 'wpfa_init');
+add_action ('activate_wp-facebook-aggregator/wp-facebook-aggregator.php', 'wpfa_activate');
 
-//calling this will insert and publish a basic test post
+//insert and publish a basic test post
 function wpfa_test_post($id, $message){
     //create a post
     $post = array(
         'post_name' => $id,
         'post_title' => $id,
         'post_content' => $message,
-        'post_excerpt' => $id
+        'post_excerpt' => $message
     );
 
     //insert post
