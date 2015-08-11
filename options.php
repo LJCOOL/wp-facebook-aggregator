@@ -21,7 +21,8 @@ function register_options(){
 }
 
 function generate_page(){
-    //put html here to generate page
+    <div class="wrap">
+    <h2>"WP Feed Aggregator Settings"</h2>
 }
 
  ?>
