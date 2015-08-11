@@ -1,5 +1,5 @@
 <?php
-//create custom plugin settings menu
+//create custom plugin options menu
 add_action('admin_menu', 'feed_options');
 
 function feed_options(){
@@ -20,9 +20,10 @@ function register_options(){
     register_setting('settings-group','option-name');
 }
 
+//HTML to generate page with forms, buttons etc.
 function generate_page(){
     <div class="wrap">
-    <h2>"WP Feed Aggregator Settings"</h2>
+    <h2>"WP Feed Aggregator Options"</h2>
 }
 
  ?>
