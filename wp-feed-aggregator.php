@@ -7,7 +7,7 @@ Version: 1.0.2
 Author: Jay Newton, Shaawin Vsingam
 */
 //include settings
-include _DIR_ . '/options.php';
+include __DIR__ . '/options.php';
 //include facebook php sdk
 require_once __DIR__ . '/vendor/autoload.php';
 
