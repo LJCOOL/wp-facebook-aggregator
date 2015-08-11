@@ -1,7 +1,7 @@
 <?php
 /*
-Plugin Name: Wordpress Facebook Aggregator
-Plugin URI: http://github.com/LJCOOL/wp-facebook-aggregator
+Plugin Name: Wordpress Feed Aggregator
+Plugin URI: http://github.com/LJCOOL/wp-feed-aggregator
 Description: Pulls and displays posts from multiple Facebook pages.
 Version: 1.0.2
 Author: Jay Newton, Shaawin Vsingam
@@ -52,7 +52,7 @@ function wpfa_call_graph_api(){
 function wpfa_activate(){
     wpfa_call_graph_api();
 }
-add_action ('activate_wp-facebook-aggregator/wp-facebook-aggregator.php', 'wpfa_activate');
+add_action ('activate_wp-feed-aggregator/wp-feed-aggregator.php', 'wpfa_activate');
 
 //insert and publish a basic test post
 function wpfa_test_post($id, $message){
