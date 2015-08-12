@@ -30,6 +30,5 @@ function register_options() {
 //HTML to generate page with forms, buttons etc.
 function generate_page() { ?>
     <div class="wrap">
-    <h2>"WP Feed Aggregator Options"</h2>
-<?php
-}?>
+    <h2>WP Feed Aggregator Options</h2>
+<?php}?>
