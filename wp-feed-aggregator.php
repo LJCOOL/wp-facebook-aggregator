@@ -3,7 +3,7 @@
 Plugin Name: Wordpress Feed Aggregator
 Plugin URI: http://github.com/LJCOOL/wp-feed-aggregator
 Description: Pulls and displays posts from multiple Facebook pages.
-Version: 1.0.2
+Version: 1.0.3
 Author: Jay Newton, Shaawin Vsingam
 */
 //include settings
@@ -16,7 +16,7 @@ define("APP_ID", "");
 define("APP_SECRET", "");
 define("APP_TOKEN", "");
 
-//create fb object to make graph api calls
+//creates fb object to make graph api calls
 function wpfa_init_fb($app_id, $app_secret){
     $fb = new Facebook\Facebook([
         'app_id' => $app_id,
@@ -26,13 +26,9 @@ function wpfa_init_fb($app_id, $app_secret){
     return $fb;
 }
 
-function wpfa_call_graph_api(){
-    $token = APP_TOKEN;
-    $fb = wpfa_init_fb(APP_ID, APP_SECRET);
-
+function wpfa_call_graph_api($fb, $token, $request){
     try {
-        // Returns a `Facebook\FacebookResponse` object
-        $response = $fb->get('/123542974439976/posts', $token);
+        $response = $fb->get($request, $token);
     } catch(Facebook\Exceptions\FacebookResponseException $e) {
         echo 'Graph returned an error: ' . $e->getMessage();
         exit;
@@ -40,20 +36,35 @@ function wpfa_call_graph_api(){
         echo 'Facebook SDK returned an error: ' . $e->getMessage();
         exit;
     }
-    //get the graph edge containing posts
-    $posts = $response->getGraphEdge();
-
-    //pull id and message content from each post (post is of type graphNode)
-    foreach ($posts as $post) {
-        wpfa_test_post($post['id'], $post['message']);
-    }
+    return $response;
 }
 
 //called when the plugin is activated
 function wpfa_activate(){
-    wpfa_call_graph_api();
+    //fb object and token
+    $token = APP_TOKEN;
+    $fb = wpfa_init_fb(APP_ID, APP_SECRET);
+
+    //get list of posts from page
+    $response = wpfa_call_graph_api($fb, $token, '/123542974439976/posts');
+    $posts = $response->getGraphEdge();
+
+    //get object_id of attached image of first post
+    $post_request = '/'.$posts[0]['id'].'?fields=object_id,message';
+    $response = wpfa_call_graph_api($fb, $token, $post_request);
+    $post = $response->getGraphNode();
+
+    //retrieve photo node with list images associated with it
+    $photo_request = '/'.$post['object_id'].'?fields=images';
+    $response = wpfa_call_graph_api($fb, $token, $photo_request);
+    $photo = $response->getGraphNode();
+
+    //insert one of the images into a post along with the post's text
+    $message = $post['message'].'<img src="'.$photo['images'][0]['source'].'" /img>';
+    wpfa_test_post($post['id'], $message);
 }
 add_action ('activate_wp-feed-aggregator/wp-feed-aggregator.php', 'wpfa_activate');
+//add_action ('init', 'wpfa_activate');
 
 //insert and publish a basic test post
 function wpfa_test_post($id, $message){
