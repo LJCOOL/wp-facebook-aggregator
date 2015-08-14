@@ -19,7 +19,7 @@ define("APP_TOKEN", "");
 //Facebook page IDs retrieved from Options
 $Facebook_IDs = array(
     'id_1' => "esc_attr( get_option('page-ID1')",
-    'id_2' => "esc_attr( get_option('page-ID2')",
+    'id_2' => "esc_attr( get_option('page-ID2')"
 );
 
 //Stripout page ID if whole URL pasted
