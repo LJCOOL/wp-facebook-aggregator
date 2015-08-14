@@ -67,19 +67,20 @@ function wpfa_activate(){
     $response = wpfa_call_graph_api($fb, $token, '/123542974439976/posts');
     $posts = $response->getGraphEdge();
 
-    //get object_id of attached image of first post
-    $post_request = '/'.$posts[0]['id'].'?fields=object_id,message';
-    $response = wpfa_call_graph_api($fb, $token, $post_request);
-    $post = $response->getGraphNode();
+    foreach ($posts as $p) {
+        $post_request = '/'.$p['id'].'?fields=object_id,message';
+        $response = wpfa_call_graph_api($fb, $token, $post_request);
+        $post = $response->getGraphNode();
 
-    //retrieve photo node with list images associated with it
-    $photo_request = '/'.$post['object_id'].'?fields=images';
-    $response = wpfa_call_graph_api($fb, $token, $photo_request);
-    $photo = $response->getGraphNode();
+        //retrieve photo node with list images associated with it
+        $photo_request = '/'.$post['object_id'].'?fields=images';
+        $response = wpfa_call_graph_api($fb, $token, $photo_request);
+        $photo = $response->getGraphNode();
 
-    //insert one of the images into a post along with the post's text
-    $message = $post['message'].'<img src="'.$photo['images'][0]['source'].'" /img>';
-    wpfa_test_post($post['id'], $message);
+        //insert one of the images into a post along with the post's text
+        $message = $post['message'].'<img src="'.$photo['images'][0]['source'].'" /img>';
+        wpfa_test_post($post['id'], $message);
+    }
 }
 add_action ('activate_wp-feed-aggregator/wp-feed-aggregator.php', 'wpfa_activate');
 //add_action ('init', 'wpfa_activate');
