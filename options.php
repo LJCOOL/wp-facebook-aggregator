@@ -26,6 +26,9 @@ function register_options() {
     //register settings to be saved
     register_setting('id-group','page-ID1');
     register_setting('id-group','page-ID2');
+    register_setting('id-group','page-ID3');
+    register_setting('id-group','page-ID4');
+    register_setting('id-group','page-ID5');
 }
 
 //HTML to generate page with forms, buttons etc.
@@ -45,6 +48,18 @@ function generate_page() { ?>
         <tr valign="top">
         <th scope="row">Facebook Page ID 2</th>
         <td><input type="text" name="page-ID2" value="<?php echo esc_attr( get_option('page-ID2') ); ?>" /></td>
+        </tr>
+        <tr valign="top">
+        <th scope="row">Facebook Page ID 3</th>
+        <td><input type="text" name="page-ID3" value="<?php echo esc_attr( get_option('page-ID2') ); ?>" /></td>
+        </tr>
+        <tr valign="top">
+        <th scope="row">Facebook Page ID 4</th>
+        <td><input type="text" name="page-ID4" value="<?php echo esc_attr( get_option('page-ID2') ); ?>" /></td>
+        </tr>
+        <tr valign="top">
+        <th scope="row">Facebook Page ID 5</th>
+        <td><input type="text" name="page-ID5" value="<?php echo esc_attr( get_option('page-ID2') ); ?>" /></td>
         </tr>
     </table>
     <?php submit_button(); ?>
