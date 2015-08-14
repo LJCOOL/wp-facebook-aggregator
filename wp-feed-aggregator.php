@@ -15,8 +15,8 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 //Facebook page IDs retrieved from Options
 $Facebook_IDs = array(
-    'id_1' => "esc_attr( get_option('page-ID1')",
-    'id_2' => "esc_attr( get_option('page-ID2')"
+    'id_1' => "esc_attr( get_option('page-ID1') )",
+    'id_2' => "esc_attr( get_option('page-ID2') )"
 );
 
 //Stripout page ID if whole URL pasted
@@ -59,9 +59,10 @@ function wpfa_activate(){
     //fb object and token
     $token = APP_TOKEN;
     $fb = wpfa_init_fb(APP_ID, APP_SECRET);
+    $page_ID = 123542974439976; //$Facebook_IDs['id_1'];
 
     //get list of posts from page
-    $response = wpfa_call_graph_api($fb, $token, '/123542974439976/posts');
+    $response = wpfa_call_graph_api($fb, $token, "/$page_ID/posts");
     $posts = $response->getGraphEdge();
 
     foreach ($posts as $p) {
