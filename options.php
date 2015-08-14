@@ -24,11 +24,30 @@ function feed_options() {
 //defines attributes to be saved
 function register_options() {
     //register settings to be saved
-    register_setting('settings-group','setting-name');
+    register_setting('id-group','page-ID1');
+    register_setting('id-group','page-ID2');
 }
 
 //HTML to generate page with forms, buttons etc.
 function generate_page() { ?>
     <div class="wrap">
     <h2>WP Feed Aggregator Options</h2>
-<?php}?>
+    <form method="post" action="options.php">
+    <?php settings_fields( 'id-group' ); ?>
+    <?php do_settings_sections( 'id-group' ); ?>
+    <table class="form-table">
+        <tr valign="top">
+        <th scope="row">Facebook Page ID 1</th>
+        <td><input type="text" name="page-ID1" value="<?php echo esc_attr( get_option('page-ID1') ); ?>" />
+        <i>eg. rmitarchitecture or 123542974439976</i>  <a href="https://lookup-id.com/" target="_blank">Still don't know?</a>
+        </td>
+        </tr>
+        <tr valign="top">
+        <th scope="row">Facebook Page ID 2</th>
+        <td><input type="text" name="page-ID2" value="<?php echo esc_attr( get_option('page-ID2') ); ?>" /></td>
+        </tr>
+    </table>
+    <?php submit_button(); ?>
+    </form>
+    </div>
+<?php } ?>
