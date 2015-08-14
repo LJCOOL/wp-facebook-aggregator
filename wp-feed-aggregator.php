@@ -16,6 +16,24 @@ define("APP_ID", "");
 define("APP_SECRET", "");
 define("APP_TOKEN", "");
 
+//Facebook page IDs retrieved from Options
+$Facebook_IDs = array(
+    'id_1' => "esc_attr( get_option('page-ID1')",
+    'id_2' => "esc_attr( get_option('page-ID2')"
+);
+
+//Stripout page ID if whole URL pasted
+/*
+$facebook_string = 'facebook.com';
+$pageID_check = stripos($id_1, $cff_facebook_string);
+
+if ( $pageID_check ) {
+    //Remove trailing slash if exists
+    $id_1 = preg_replace('{/$}', '', $id_1);
+    //Get last part of url
+    $id_1 = substr( $id_1, strrpos( $id_1, '/' )+1 );
+}*/
+
 //creates fb object to make graph api calls
 function wpfa_init_fb($app_id, $app_secret){
     $fb = new Facebook\Facebook([
