@@ -8,7 +8,7 @@ Author: Jay Newton, Shaawin Vsingam
 */
 //include settings
 include __DIR__ . '/options.php';
-//include settings
+//include api keys
 include __DIR__ . '/keys.php';
 //include facebook php sdk
 require_once __DIR__ . '/vendor/autoload.php';
