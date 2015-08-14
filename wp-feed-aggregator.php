@@ -8,13 +8,10 @@ Author: Jay Newton, Shaawin Vsingam
 */
 //include settings
 include __DIR__ . '/options.php';
+//include settings
+include __DIR__ . '/keys.php';
 //include facebook php sdk
 require_once __DIR__ . '/vendor/autoload.php';
-
-//definitions for api keys
-define("APP_ID", "");
-define("APP_SECRET", "");
-define("APP_TOKEN", "");
 
 //Facebook page IDs retrieved from Options
 $Facebook_IDs = array(
