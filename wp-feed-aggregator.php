@@ -16,44 +16,43 @@ include_once __DIR__ . '/wpfa_fb.php';
 //called when the plugin is activated
 function wpfa_activate(){
     $page = new wpfa_FbPage('123542974439976', APP_ID, APP_SECRET, APP_TOKEN);
-    $posts = $page->wpfa_get_posts();
+    $page_posts = $page->wpfa_get_posts();
 
     //here we would check against the database
+
+    //for example, just add the most recent posts (25)
+    foreach ($page_posts as $p) {
+        $post = $page->wpfa_get_post($p['id']);
+        $wp_post = new wpfa_Post($post);
+        $wp_post->wpfa_publish();
+    }
 
 }
 add_action ('activate_wp-feed-aggregator/wp-feed-aggregator.php', 'wpfa_activate');
 
-//insert and publish a basic test post
-function wpfa_test_post($id, $message){
-    //create a post
-    $post = array(
-        'post_name' => $id,
-        'post_title' => $id,
-        'post_content' => $message,
-        'post_excerpt' => $message
-    );
+class wpfa_Post{
+    private $id;
+    private $message;
+    private $image;
 
-    //insert post
-    $post_id = wp_insert_post($post);
+    function __construct($post){
+        $this->id = $post['id'];
+        $this->message = $post['message'];
+        $this->image = $post['image'];
+    }
 
-    //publish post
-    wp_publish_post($post_id);
-}
-
-function breh(){
-    foreach ($posts as $p) {
-        $post_request = '/'.$p['id'].'?fields=object_id,message';
-        $response = wpfa_call_graph_api($fb, $token, $post_request);
-        $post = $response->getGraphNode();
-
-        //retrieve photo node with list images associated with it
-        $photo_request = '/'.$post['object_id'].'?fields=images';
-        $response = wpfa_call_graph_api($fb, $token, $photo_request);
-        $photo = $response->getGraphNode();
-
-        //insert one of the images into a post along with the post's text
-        $message = $post['message'].'<img src="'.$photo['images'][0]['source'].'" /img>';
-        wpfa_test_post($post['id'], $message);
+    function wpfa_publish(){
+        //create a post
+        $p = array(
+            'post_name' => $this->id,
+            'post_title' => " ",
+            'post_content' => $this->message.'<img src="'.$this->image.'" /img>',
+            'post_excerpt' => $this->message
+        );
+        //insert post
+        $post_id = wp_insert_post($p);
+        //publish post
+        wp_publish_post($post_id);
     }
 }
 ?>

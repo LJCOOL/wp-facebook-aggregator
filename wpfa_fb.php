@@ -5,14 +5,12 @@ require_once __DIR__ . '/vendor/autoload.php';
 /**
  * Facebook Page object.
  */
-class wpfa_FbPage
-{
+class wpfa_FbPage{
     private $page_ID;
     private $fb;
     private $token;
 
-    function __construct($page_ID, $app_id, $app_secret, $token)
-    {
+    function __construct($page_ID, $app_id, $app_secret, $token){
         $this->page_ID = $page_ID;
         $this->token = $token;
         $this->fb = new Facebook\Facebook([
@@ -39,6 +37,22 @@ class wpfa_FbPage
         $request = '/'.$this->page_ID.'/posts?fields=id';
         $response = $this->wpfa_call_graph_api($request);
         return $response->getGraphEdge();
+    }
+
+    function wpfa_get_post($post_id){
+        $request = '/'.$post_id.'?fields=object_id,message';
+        $response = $this->wpfa_call_graph_api($request);
+        $post = $response->getGraphNode();
+
+        //retrieve photo node with list images associated with it
+        $photo_request = '/'.$post['object_id'].'?fields=images';
+        $response = $this->wpfa_call_graph_api($photo_request);
+        $photo = $response->getGraphNode();
+
+        return array(
+            'id' => $post_id,
+            'message' => $post['message'],
+            'image' => $photo['images'][0]['source']);
     }
 }
  ?>
