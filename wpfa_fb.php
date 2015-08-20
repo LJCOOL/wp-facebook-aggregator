@@ -25,9 +25,11 @@ class wpfa_FbPage{
             $response = $this->fb->get($request, $this->token);
         } catch(Facebook\Exceptions\FacebookResponseException $e) {
             echo 'Graph returned an error: ' . $e->getMessage();
+            echo $request;
             exit;
         } catch(Facebook\Exceptions\FacebookSDKException $e) {
             echo 'Facebook SDK returned an error: ' . $e->getMessage();
+            echo $request;
             exit;
         }
         return $response;
@@ -40,19 +42,26 @@ class wpfa_FbPage{
     }
 
     function wpfa_get_post($post_id){
-        $request = '/'.$post_id.'?fields=object_id,message';
+        $p['id'] = $post_id;
+
+        $request = '/'.$post_id.'?fields=object_id,message,status_type';
         $response = $this->wpfa_call_graph_api($request);
         $post = $response->getGraphNode();
+        $p['message'] = $post['message'];
+        error_log($post['status_type']);
 
         //retrieve photo node with list images associated with it
-        $photo_request = '/'.$post['object_id'].'?fields=images';
-        $response = $this->wpfa_call_graph_api($photo_request);
-        $photo = $response->getGraphNode();
+        if ($post['status_type'] == 'added_photos'){
+            $object_request = '/'.$post['object_id'].'?fields=images';
+            $response = $this->wpfa_call_graph_api($object_request);
+            $object = $response->getGraphNode();
+            $p['image'] = $object['images'][0]['source'];
+        }
+        else {
+            $p['image'] = NULL;
+        }
 
-        return array(
-            'id' => $post_id,
-            'message' => $post['message'],
-            'image' => $photo['images'][0]['source']);
+        return $p;
     }
 }
- ?>
+?>
