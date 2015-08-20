@@ -15,11 +15,11 @@ function feed_options() {
                   'Feed Aggregator Options',
                   'manage_options',
                   'wpfa-options',
-                  'generate_page'
-                );
-    //register settings
-    add_action('admin_init','register_options');
+                  'generate_page');
 }
+
+//register settings
+add_action('admin_init','register_options');
 
 //defines attributes to be saved
 function register_options() {
