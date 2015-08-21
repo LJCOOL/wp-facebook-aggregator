@@ -16,8 +16,9 @@ include_once __DIR__ . '/wpfa_fb.php';
 //called when the plugin is activated
 function wpfa_activate(){
     $pages = array();
-    array_push($pages, new wpfa_FbPage('123542974439976', APP_ID, APP_SECRET, APP_TOKEN));
-    array_push($pages, new wpfa_FbPage('20528438720', APP_ID, APP_SECRET, APP_TOKEN));
+    wpfa_generateInitialOptions();
+    //array_push($pages, new wpfa_FbPage(get_option('fb_ID1'), APP_ID, APP_SECRET, APP_TOKEN));
+    //array_push($pages, new wpfa_FbPage(get_option('fb_ID2'), APP_ID, APP_SECRET, APP_TOKEN));
     foreach ($pages as $page) {
         $posts = $page->wpfa_get_posts();
         //database check here
@@ -29,7 +30,13 @@ function wpfa_activate(){
         }
     }
 }
-add_action ('activate_wp-feed-aggregator/wp-feed-aggregator.php', 'wpfa_activate');
+
+add_action('activate_wp-feed-aggregator/wp-feed-aggregator.php', 'wpfa_activate');
+/* Checks if settings have been changed.
+   Called towards the end of an admin page loading to avoid race condition with
+   options page on plugin activation, added bonus is that errors are inserted
+   into the footer and so doesn't take over the page. */
+add_action('admin_footer','checkOptions');
 
 class wpfa_Post{
     private $id;
@@ -60,6 +67,31 @@ class wpfa_Post{
 
         //publish post
         wp_publish_post($post_id);
+    }
+}
+
+function wpfa_generateInitialOptions() {
+    update_option('fb_ID1','123542974439976');
+    update_option('fb_ID2','20528438720');
+    //instantiate 'variable like' IDs
+    for ($i = 3; $i <=5; $i++ ) {
+        update_option("fb_ID$i",'');
+    }
+
+    //sanitise settings in options menu
+    for ($i = 1; $i <=5; $i++ ) {
+      update_option("page-ID$i",'');
+    }
+}
+
+//checks if settings have changed
+function wpfa_checkOptions() {
+    for ($i = 1; $i <=5; $i++ ) {
+      if (get_option("page-ID$i") != get_option("fb_ID$i") &&
+          get_option("page-ID$i") != '') {
+            //get posts
+            update_option("fb_ID$i",get_option("page-ID$i"));
+          }
     }
 }
 ?>
