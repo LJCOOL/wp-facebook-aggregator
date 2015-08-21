@@ -16,9 +16,9 @@ include_once __DIR__ . '/wpfa_fb.php';
 //called when the plugin is activated
 function wpfa_activate(){
     $pages = array();
-    generateOptions();
-    array_push($pages, new wpfa_FbPage(get_option('fb_ID1'), APP_ID, APP_SECRET, APP_TOKEN));
-    array_push($pages, new wpfa_FbPage(get_option('fb_ID2'), APP_ID, APP_SECRET, APP_TOKEN));
+    wpfa_generateInitialOptions();
+    //array_push($pages, new wpfa_FbPage(get_option('fb_ID1'), APP_ID, APP_SECRET, APP_TOKEN));
+    //array_push($pages, new wpfa_FbPage(get_option('fb_ID2'), APP_ID, APP_SECRET, APP_TOKEN));
     foreach ($pages as $page) {
         $posts = $page->wpfa_get_posts();
         //database check here
@@ -30,7 +30,12 @@ function wpfa_activate(){
         }
     }
 }
+
 add_action('activate_wp-feed-aggregator/wp-feed-aggregator.php', 'wpfa_activate');
+/* Checks if settings have been changed.
+   Called towards the end of an admin page loading to avoid race condition on
+   plugin activation, added bonus is that errors are inserted into the footer
+   and so doesn't take over the page. */
 add_action('admin_footer','checkOptions');
 
 class wpfa_Post{
@@ -65,50 +70,28 @@ class wpfa_Post{
     }
 }
 
-function generateOptions() {
+function wpfa_generateInitialOptions() {
     update_option('fb_ID1','123542974439976');
     update_option('fb_ID2','20528438720');
-    update_option('fb_ID3','');
-    update_option('fb_ID4','');
-    update_option('fb_ID5','');
+    //instantiate 'variable like' IDs
+    for ($i = 3; $i <=5; $i++ ) {
+        update_option("fb_ID$i",'');
+    }
 
-    update_option('page-ID1', NULL);
-    update_option('page-ID2', NULL);
-    update_option('page-ID3', NULL);
-    update_option('page-ID4', NULL);
-    update_option('page-ID5', NULL);
+    //sanitise settings in options menu
+    for ($i = 1; $i <=5; $i++ ) {
+      update_option("page-ID$i",'');
+    }
 }
 
-function checkOptions() {
-    if (get_option('page-ID1') != get_option('fb_ID1')) {
-      $pages = array();
-      array_push($pages, new wpfa_FbPage(get_option('page-ID1'), APP_ID, APP_SECRET, APP_TOKEN));
-      foreach ($pages as $page) {
-          $posts = $page->wpfa_get_posts();
-          //database check here
-          //as an example, add the most recent posts (25)
-          foreach ($posts as $p) {
-              $post = $page->wpfa_get_post($p['id']);
-              $wp_post = new wpfa_Post($post);
-              $wp_post->wpfa_publish();
+//checks if settings have changed
+function wpfa_checkOptions() {
+    for ($i = 1; $i <=5; $i++ ) {
+      if (get_option("page-ID$i") != get_option("fb_ID$i") &&
+          get_option("page-ID$i") != '') {
+            //get posts
+            update_option("fb_ID$i",get_option("page-ID$i"));
           }
-      }
-      update_option('fb_ID1',get_option('page-ID1'));
-    }
-    if (get_option('page-ID2') != get_option('fb_ID2')) {
-      $pages = array();
-      array_push($pages, new wpfa_FbPage(get_option('page-ID2'), APP_ID, APP_SECRET, APP_TOKEN));
-      foreach ($pages as $page) {
-          $posts = $page->wpfa_get_posts();
-          //database check here
-          //as an example, add the most recent posts (25)
-          foreach ($posts as $p) {
-              $post = $page->wpfa_get_post($p['id']);
-              $wp_post = new wpfa_Post($post);
-              $wp_post->wpfa_publish();
-          }
-      }
-      update_option('fb_ID2',get_option('page-ID2'));
     }
 }
 ?>
