@@ -60,7 +60,6 @@ function wpfa_update() {
         }
     }
 }
-<<<<<<< HEAD
 
 add_action('activate_wp-feed-aggregator/wp-feed-aggregator.php', 'wpfa_activate');
 /* Checks if settings have been changed.
@@ -68,8 +67,7 @@ add_action('activate_wp-feed-aggregator/wp-feed-aggregator.php', 'wpfa_activate'
    options page on plugin activation, added bonus is that errors are inserted
    into the footer and so doesn't take over the page. */
 add_action('admin_footer','checkOptions');
-=======
->>>>>>> b49b204ed2810bbb34e6faa72dd6f3dfb0740288
+
 
 class wpfa_Post{
     private $id;
