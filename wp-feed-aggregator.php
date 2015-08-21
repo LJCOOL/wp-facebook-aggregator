@@ -6,17 +6,20 @@ Description: Pulls and displays posts from multiple Facebook pages.
 Version: 1.0.5
 Author: Jay Newton, Shaawin Vsingam
 */
+require_once(ABSPATH . 'wp-admin/includes/media.php');
+require_once(ABSPATH . 'wp-admin/includes/file.php');
+require_once(ABSPATH . 'wp-admin/includes/image.php');
 //include settings
-include __DIR__ . '/options.php';
+include_once __DIR__ . '/options.php';
 //include api keys
-include __DIR__ . '/keys.php';
+include_once __DIR__ . '/keys.php';
 //include facebook module
 include_once __DIR__ . '/wpfa_fb.php';
 
 function wpfa_cron_interval($schedules) {
     $schedules['five_minutes'] = array(
         'interval' => 300,
-        'display'  => __('Every Two Minutes')
+        'display'  => __('Every Five Minutes')
     );
     return $schedules;
 }
@@ -41,7 +44,7 @@ register_deactivation_hook( __FILE__, 'wpfa_deactivate');
 
 //update wordpress with facebook posts
 function wpfa_update() {
-    error_log('CRON');
+    error_log('CRON - wpfa_update');
     $pages = array();
     array_push($pages, new wpfa_FbPage('123542974439976', APP_ID, APP_SECRET, APP_TOKEN));
     array_push($pages, new wpfa_FbPage('20528438720', APP_ID, APP_SECRET, APP_TOKEN));
@@ -80,9 +83,13 @@ class wpfa_Post{
         $post_id = wp_insert_post($p);
 
         //attach photo to post
-        if ($this->image != NULL){
-            media_sideload_image($this->image, $post_id);
-        }
+        $tmp = download_url($this->image);
+        $file = array(
+            'name' => basename($this->image),
+            'tmp_name' => $tmp
+        );
+        $attach_id = media_handle_sideload($file, $post_id);
+        add_post_meta($post_id, '_thumbnail_id', $attach_id);
 
         //publish post
         wp_publish_post($post_id);
