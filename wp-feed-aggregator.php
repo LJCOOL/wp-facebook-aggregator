@@ -30,10 +30,6 @@ function wpfa_activate() {
 }
 register_activation_hook(__FILE__, 'wpfa_activate');
 
-function wpfa_wpfa() {
-    $schedule = wp_get_schedule( 'wpfa_cron_hook' );
-    error_log($schedule);
-}
 //register function to scheduled
 add_action ('wpfa_cron_hook', 'wpfa_update');
 
