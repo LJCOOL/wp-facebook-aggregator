@@ -16,8 +16,9 @@ include_once __DIR__ . '/wpfa_fb.php';
 //called when the plugin is activated
 function wpfa_activate(){
     $pages = array();
-    array_push($pages, new wpfa_FbPage('123542974439976', APP_ID, APP_SECRET, APP_TOKEN));
-    array_push($pages, new wpfa_FbPage('20528438720', APP_ID, APP_SECRET, APP_TOKEN));
+    generateOptions();
+    array_push($pages, new wpfa_FbPage(get_option('fb_ID1'), APP_ID, APP_SECRET, APP_TOKEN));
+    array_push($pages, new wpfa_FbPage(get_option('fb_ID2'), APP_ID, APP_SECRET, APP_TOKEN));
     foreach ($pages as $page) {
         $posts = $page->wpfa_get_posts();
         //database check here
@@ -29,7 +30,8 @@ function wpfa_activate(){
         }
     }
 }
-add_action ('activate_wp-feed-aggregator/wp-feed-aggregator.php', 'wpfa_activate');
+add_action('activate_wp-feed-aggregator/wp-feed-aggregator.php', 'wpfa_activate');
+add_action('admin_footer','checkOptions');
 
 class wpfa_Post{
     private $id;
@@ -60,6 +62,53 @@ class wpfa_Post{
 
         //publish post
         wp_publish_post($post_id);
+    }
+}
+
+function generateOptions() {
+    update_option('fb_ID1','123542974439976');
+    update_option('fb_ID2','20528438720');
+    update_option('fb_ID3','');
+    update_option('fb_ID4','');
+    update_option('fb_ID5','');
+
+    update_option('page-ID1', NULL);
+    update_option('page-ID2', NULL);
+    update_option('page-ID3', NULL);
+    update_option('page-ID4', NULL);
+    update_option('page-ID5', NULL);
+}
+
+function checkOptions() {
+    if (get_option('page-ID1') != get_option('fb_ID1')) {
+      $pages = array();
+      array_push($pages, new wpfa_FbPage(get_option('page-ID1'), APP_ID, APP_SECRET, APP_TOKEN));
+      foreach ($pages as $page) {
+          $posts = $page->wpfa_get_posts();
+          //database check here
+          //as an example, add the most recent posts (25)
+          foreach ($posts as $p) {
+              $post = $page->wpfa_get_post($p['id']);
+              $wp_post = new wpfa_Post($post);
+              $wp_post->wpfa_publish();
+          }
+      }
+      update_option('fb_ID1',get_option('page-ID1'));
+    }
+    if (get_option('page-ID2') != get_option('fb_ID2')) {
+      $pages = array();
+      array_push($pages, new wpfa_FbPage(get_option('page-ID2'), APP_ID, APP_SECRET, APP_TOKEN));
+      foreach ($pages as $page) {
+          $posts = $page->wpfa_get_posts();
+          //database check here
+          //as an example, add the most recent posts (25)
+          foreach ($posts as $p) {
+              $post = $page->wpfa_get_post($p['id']);
+              $wp_post = new wpfa_Post($post);
+              $wp_post->wpfa_publish();
+          }
+      }
+      update_option('fb_ID2',get_option('page-ID2'));
     }
 }
 ?>
