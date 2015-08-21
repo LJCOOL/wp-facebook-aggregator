@@ -27,6 +27,7 @@ add_filter('cron_schedules', 'wpfa_cron_interval');
 
 //called when the plugin is activated
 function wpfa_activate() {
+    wpfa_generateInitialOptions();
     if(!wp_next_scheduled('wpfa_cron_hook')) {
         wp_schedule_event(time(), 'five_minutes', 'wpfa_cron_hook');
     }
@@ -44,9 +45,7 @@ register_deactivation_hook( __FILE__, 'wpfa_deactivate');
 
 //update wordpress with facebook posts
 function wpfa_update() {
-    error_log('CRON - wpfa_update');
     $pages = array();
-    wpfa_generateInitialOptions();
     //array_push($pages, new wpfa_FbPage(get_option('fb_ID1'), APP_ID, APP_SECRET, APP_TOKEN));
     //array_push($pages, new wpfa_FbPage(get_option('fb_ID2'), APP_ID, APP_SECRET, APP_TOKEN));
     foreach ($pages as $page) {
