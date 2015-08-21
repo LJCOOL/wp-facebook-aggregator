@@ -6,15 +6,45 @@ Description: Pulls and displays posts from multiple Facebook pages.
 Version: 1.0.5
 Author: Jay Newton, Shaawin Vsingam
 */
+require_once(ABSPATH . 'wp-admin/includes/media.php');
+require_once(ABSPATH . 'wp-admin/includes/file.php');
+require_once(ABSPATH . 'wp-admin/includes/image.php');
 //include settings
-include __DIR__ . '/options.php';
+include_once __DIR__ . '/options.php';
 //include api keys
-include __DIR__ . '/keys.php';
+include_once __DIR__ . '/keys.php';
 //include facebook module
 include_once __DIR__ . '/wpfa_fb.php';
 
+function wpfa_cron_interval($schedules) {
+    $schedules['five_minutes'] = array(
+        'interval' => 300,
+        'display'  => __('Every Five Minutes')
+    );
+    return $schedules;
+}
+add_filter('cron_schedules', 'wpfa_cron_interval');
+
 //called when the plugin is activated
-function wpfa_activate(){
+function wpfa_activate() {
+    if(!wp_next_scheduled('wpfa_cron_hook')) {
+        wp_schedule_event(time(), 'five_minutes', 'wpfa_cron_hook');
+    }
+}
+register_activation_hook(__FILE__, 'wpfa_activate');
+
+//register function to scheduled
+add_action ('wpfa_cron_hook', 'wpfa_update');
+
+//called when the plugin is deactivated
+function wpfa_deactivate() {
+   wp_clear_scheduled_hook('wpfa_cron_hook');
+}
+register_deactivation_hook( __FILE__, 'wpfa_deactivate');
+
+//update wordpress with facebook posts
+function wpfa_update() {
+    error_log('CRON - wpfa_update');
     $pages = array();
     wpfa_generateInitialOptions();
     //array_push($pages, new wpfa_FbPage(get_option('fb_ID1'), APP_ID, APP_SECRET, APP_TOKEN));
@@ -30,6 +60,7 @@ function wpfa_activate(){
         }
     }
 }
+<<<<<<< HEAD
 
 add_action('activate_wp-feed-aggregator/wp-feed-aggregator.php', 'wpfa_activate');
 /* Checks if settings have been changed.
@@ -37,6 +68,8 @@ add_action('activate_wp-feed-aggregator/wp-feed-aggregator.php', 'wpfa_activate'
    options page on plugin activation, added bonus is that errors are inserted
    into the footer and so doesn't take over the page. */
 add_action('admin_footer','checkOptions');
+=======
+>>>>>>> b49b204ed2810bbb34e6faa72dd6f3dfb0740288
 
 class wpfa_Post{
     private $id;
@@ -61,9 +94,13 @@ class wpfa_Post{
         $post_id = wp_insert_post($p);
 
         //attach photo to post
-        if ($this->image != NULL){
-            media_sideload_image($this->image, $post_id);
-        }
+        $tmp = download_url($this->image);
+        $file = array(
+            'name' => basename($this->image),
+            'tmp_name' => $tmp
+        );
+        $attach_id = media_handle_sideload($file, $post_id);
+        add_post_meta($post_id, '_thumbnail_id', $attach_id);
 
         //publish post
         wp_publish_post($post_id);
