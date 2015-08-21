@@ -120,6 +120,7 @@ function wpfa_generateInitialOptions() {
 //checks if settings have changed
 function wpfa_checkOptions() {
     for ($i = 1; $i <=5; $i++ ) {
+      // if the 'local' ID is different from what's in the settings and not empty
       if (get_option("page-ID$i") != get_option("fb_ID$i") &&
           get_option("page-ID$i") != '') {
             //get posts
