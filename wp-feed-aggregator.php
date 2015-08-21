@@ -13,8 +13,39 @@ include __DIR__ . '/keys.php';
 //include facebook module
 include_once __DIR__ . '/wpfa_fb.php';
 
+function wpfa_cron_interval($schedules) {
+    $schedules['five_minutes'] = array(
+        'interval' => 300,
+        'display'  => __('Every Two Minutes')
+    );
+    return $schedules;
+}
+add_filter('cron_schedules', 'wpfa_cron_interval');
+
 //called when the plugin is activated
-function wpfa_activate(){
+function wpfa_activate() {
+    if(!wp_next_scheduled('wpfa_cron_hook')) {
+        wp_schedule_event(time(), 'five_minutes', 'wpfa_cron_hook');
+    }
+}
+register_activation_hook(__FILE__, 'wpfa_activate');
+
+function wpfa_wpfa() {
+    $schedule = wp_get_schedule( 'wpfa_cron_hook' );
+    error_log($schedule);
+}
+//register function to scheduled
+add_action ('wpfa_cron_hook', 'wpfa_update');
+
+//called when the plugin is deactivated
+function wpfa_deactivate() {
+   wp_clear_scheduled_hook('wpfa_cron_hook');
+}
+register_deactivation_hook( __FILE__, 'wpfa_deactivate');
+
+//update wordpress with facebook posts
+function wpfa_update() {
+    error_log('CRON');
     $pages = array();
     array_push($pages, new wpfa_FbPage('123542974439976', APP_ID, APP_SECRET, APP_TOKEN));
     array_push($pages, new wpfa_FbPage('20528438720', APP_ID, APP_SECRET, APP_TOKEN));
@@ -29,7 +60,6 @@ function wpfa_activate(){
         }
     }
 }
-add_action ('activate_wp-feed-aggregator/wp-feed-aggregator.php', 'wpfa_activate');
 
 class wpfa_Post{
     private $id;
