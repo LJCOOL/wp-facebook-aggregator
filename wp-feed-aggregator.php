@@ -111,7 +111,7 @@ function wpfa_generateInitialOptions() {
         update_option("fb_ID$i",'');
     }
 
-    //sanitise settings in options menu
+    //sanitise settings in options menu upon activation
     for ($i = 1; $i <=5; $i++ ) {
       update_option("page-ID$i",'');
     }
@@ -123,7 +123,9 @@ function wpfa_checkOptions() {
       // if the 'local' ID is different from what's in the settings and not empty
       if (get_option("page-ID$i") != get_option("fb_ID$i") &&
           get_option("page-ID$i") != '') {
-            //get posts
+            //TODO get posts
+
+            //update our 'local' variable so it is in par with the settings
             update_option("fb_ID$i",get_option("page-ID$i"));
           }
     }
