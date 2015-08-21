@@ -61,7 +61,6 @@ function wpfa_update() {
     }
 }
 
-add_action('activate_wp-feed-aggregator/wp-feed-aggregator.php', 'wpfa_activate');
 /* Checks if settings have been changed.
    Called towards the end of an admin page loading to avoid race condition with
    options page on plugin activation, added bonus is that errors are inserted
