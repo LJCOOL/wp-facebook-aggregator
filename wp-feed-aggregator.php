@@ -117,6 +117,16 @@ function wpfa_generateInitialOptions() {
     }
 }
 
+//retrieves list of facebook IDs set by user
+function wpfa_getSettingsList() {
+    $list = array();
+    for ($i = 1; $i <= 5; $i++) {
+      if (get_option("page-ID$i") != '')
+          $list($i-0) => get_option("page-ID$i");
+    }
+    return $list;
+}
+
 //checks if settings have changed
 function wpfa_checkOptions() {
     for ($i = 1; $i <=5; $i++ ) {
