@@ -38,7 +38,7 @@ add_action ('wpfa_cron_hook', 'wpfa_update');
 
 function wpfa_reset_cron(){
     if(wp_next_scheduled('wpfa_cron_hook')) {
-        wp_clear_scheduled_hook('wpfa_cron_hook')
+        wp_clear_scheduled_hook('wpfa_cron_hook');
         wp_schedule_event(time(), 'five_minutes', 'wpfa_cron_hook');
     }
     else {
@@ -54,15 +54,15 @@ register_deactivation_hook( __FILE__, 'wpfa_deactivate');
 
 //update wordpress with facebook posts
 function wpfa_update() {
-    $pages = array();
-    //array_push($pages, new wpfa_FbPage(get_option('fb_ID1'), APP_ID, APP_SECRET, APP_TOKEN));
-    //array_push($pages, new wpfa_FbPage(get_option('fb_ID2'), APP_ID, APP_SECRET, APP_TOKEN));
-    foreach ($pages as $page) {
-        $posts = $page->wpfa_get_posts();
+    $fb_page = new wpfa_FbPage(APP_ID, APP_SECRET, APP_TOKEN);
+    $id_list = wpfa_getSettingsList();
+    foreach ($id_list as $id) {
+        error_log($id);
+        $posts = $fb_page->wpfa_get_posts($id);
         //database check here
         //as an example, add the most recent posts (25)
         foreach ($posts as $p) {
-            $post = $page->wpfa_get_post($p['id']);
+            $post = $fb_page->wpfa_get_post($p['id']);
             $wp_post = new wpfa_Post($post);
             $wp_post->wpfa_publish();
         }
