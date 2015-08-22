@@ -28,14 +28,23 @@ add_filter('cron_schedules', 'wpfa_cron_interval');
 //called when the plugin is activated
 function wpfa_activate() {
     wpfa_generateInitialOptions();
-    if(!wp_next_scheduled('wpfa_cron_hook')) {
-        wp_schedule_event(time(), 'five_minutes', 'wpfa_cron_hook');
-    }
+    //since we still have those 2 hardcoded ids, set cron here
+    wpfa_reset_cron();
 }
 register_activation_hook(__FILE__, 'wpfa_activate');
 
 //register function to scheduled
 add_action ('wpfa_cron_hook', 'wpfa_update');
+
+function wpfa_reset_cron(){
+    if(wp_next_scheduled('wpfa_cron_hook')) {
+        wp_clear_scheduled_hook('wpfa_cron_hook')
+        wp_schedule_event(time(), 'five_minutes', 'wpfa_cron_hook');
+    }
+    else {
+        wp_schedule_event(time(), 'five_minutes', 'wpfa_cron_hook');
+    }
+}
 
 //called when the plugin is deactivated
 function wpfa_deactivate() {
@@ -133,8 +142,8 @@ function wpfa_checkOptions() {
       // if the 'local' ID is different from what's in the settings and not empty
       if (get_option("page-ID$i") != get_option("fb_ID$i") &&
           get_option("page-ID$i") != '') {
-            //TODO call reset cron to retrieve new posts from facebook
-
+            //call reset cron to retrieve new posts from facebook
+            wpfa_reset_cron();
             //update our 'local' variable so it is in par with the settings
             update_option("fb_ID$i",get_option("page-ID$i"));
           }
