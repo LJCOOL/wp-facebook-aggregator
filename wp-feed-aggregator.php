@@ -122,7 +122,7 @@ function wpfa_getSettingsList() {
     $list = array();
     for ($i = 1; $i <= 5; $i++) {
       if (get_option("page-ID$i") != '')
-          $list($i-0) => get_option("page-ID$i");
+          array_push($list,get_option("page-ID$i"));
     }
     return $list;
 }
