@@ -28,6 +28,7 @@ add_filter('cron_schedules', 'wpfa_cron_interval');
 //called when the plugin is activated
 function wpfa_activate() {
     wpfa_generateInitialOptions();
+    wpfa_reset_cron();
 }
 register_activation_hook(__FILE__, 'wpfa_activate');
 
