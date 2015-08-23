@@ -48,6 +48,7 @@ function wpfa_reset_cron(){
 //called when the plugin is deactivated
 function wpfa_deactivate() {
    wp_clear_scheduled_hook('wpfa_cron_hook');
+   //delete option for welcome message purposes.
    delete_option('wpfa_activated');
 }
 register_deactivation_hook( __FILE__, 'wpfa_deactivate');
@@ -151,8 +152,11 @@ function wpfa_checkOptions() {
     }
 }
 
+//displays a welcome message in an appropriate manner.
 function wpfa_displayWelcome() {
+    //check so it displays message only upon plugin activation
     if (WPFA_ACTIVATED != get_option('wpfa_activated')) {
+        //adds a temporary, variable like option if it's just been activated
         update_option('wpfa_activated','WPFA_ACTIVATED');
         ?>
             <div class="updated">
