@@ -47,6 +47,7 @@ function wpfa_reset_cron(){
 //called when the plugin is deactivated
 function wpfa_deactivate() {
    wp_clear_scheduled_hook('wpfa_cron_hook');
+   delete_option('wpfa_activated');
 }
 register_deactivation_hook( __FILE__, 'wpfa_deactivate');
 
@@ -72,6 +73,9 @@ function wpfa_update() {
    options page on plugin activation, added bonus is that errors are inserted
    into the footer and so doesn't take over the page. */
 add_action('admin_footer','wpfa_checkOptions');
+
+//Display infromative message to user upon plugin activation
+add_action('admin_notices', 'wpfa_displayWelcome');
 
 
 class wpfa_Post{
@@ -135,7 +139,7 @@ function wpfa_getSettingsList() {
 //checks if settings have changed
 function wpfa_checkOptions() {
     for ($i = 1; $i <=5; $i++ ) {
-      // if the 'local' ID is different from what's in the settings and not empty
+        // if the 'local' ID is different from what's in the settings and not empty
         if (get_option("page-ID$i") != get_option("fb_ID$i") &&
             get_option("page-ID$i") != '') {
             //call reset cron to retrieve new posts from facebook
@@ -145,4 +149,17 @@ function wpfa_checkOptions() {
         }
     }
 }
+
+function wpfa_displayWelcome() {
+    if (WPFA_ACTIVATED != get_option('wpfa_activated')) {
+        update_option('wpfa_activated','WPFA_ACTIVATED');
+        ?>
+            <div class="updated">
+            <p><?php echo "<strong>Please click on the <em>Feed Aggregator Options</em>
+                           on the side pane to get started.</strong>" ?></p>
+            </div>
+        <?php
+    }
+}
+
 ?>
