@@ -111,10 +111,8 @@ class wpfa_Post{
 }
 
 function wpfa_generateInitialOptions() {
-    update_option('fb_ID1','123542974439976');
-    update_option('fb_ID2','20528438720');
     //instantiate 'variable like' IDs
-    for ($i = 3; $i <=5; $i++ ) {
+    for ($i = 1; $i <=5; $i++ ) {
         update_option("fb_ID$i",'');
     }
 
