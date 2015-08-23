@@ -28,7 +28,6 @@ add_filter('cron_schedules', 'wpfa_cron_interval');
 //called when the plugin is activated
 function wpfa_activate() {
     wpfa_generateInitialOptions();
-    //since we still have those 2 hardcoded ids, set cron here
     wpfa_reset_cron();
 }
 register_activation_hook(__FILE__, 'wpfa_activate');
