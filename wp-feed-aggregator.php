@@ -28,7 +28,6 @@ add_filter('cron_schedules', 'wpfa_cron_interval');
 //called when the plugin is activated
 function wpfa_activate() {
     wpfa_generateInitialOptions();
-    wpfa_reset_cron();
 }
 register_activation_hook(__FILE__, 'wpfa_activate');
 
@@ -55,17 +54,21 @@ register_deactivation_hook( __FILE__, 'wpfa_deactivate');
 
 //update wordpress with facebook posts
 function wpfa_update() {
+    //get the time of the last update
+    $last_update = get_option('wpfa_last_update_time');
+    update_option('wpfa_last_update_time', time());
+
     $fb_page = new wpfa_FbPage(APP_ID, APP_SECRET, APP_TOKEN);
     $id_list = wpfa_getSettingsList();
     foreach ($id_list as $id) {
-        error_log($id);
         $posts = $fb_page->wpfa_get_posts($id);
-        //database check here
-        //as an example, add the most recent posts (25)
         foreach ($posts as $p) {
-            $post = $fb_page->wpfa_get_post($p['id']);
-            $wp_post = new wpfa_Post($post);
-            $wp_post->wpfa_publish();
+            //compare time, add posts if newer than last update
+            if ($p['created_time']->getTimeStamp() > $last_update){
+                $post = $fb_page->wpfa_get_post($p['id']);
+                $wp_post = new wpfa_Post($post);
+                $wp_post->wpfa_publish();
+            }
         }
     }
 }
@@ -126,6 +129,9 @@ function wpfa_generateInitialOptions() {
     for ($i = 1; $i <=5; $i++ ) {
         update_option("page-ID$i",'');
     }
+
+    //option to store time of last update
+    update_option('wpfa_last_update_time', 0);
 }
 
 //retrieves list of facebook IDs set by user

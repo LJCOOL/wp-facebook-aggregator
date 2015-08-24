@@ -34,7 +34,7 @@ class wpfa_FbPage{
     }
 
     function wpfa_get_posts($page_ID){
-        $request = '/'.$page_ID.'/posts?fields=id';
+        $request = '/'.$page_ID.'/posts?fields=id,created_time';
         $response = $this->wpfa_call_graph_api($request);
         return $response->getGraphEdge();
     }
