@@ -97,7 +97,6 @@ class wpfa_Post{
         $p = array(
             'post_name' => $this->id,
             'post_title' => $this->wpfa_getTitle(),
-            'post_title' => " ",
             'post_content' => $this->message,
             'post_excerpt' => $this->message
         );
