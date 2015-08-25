@@ -77,6 +77,16 @@ function wpfa_update() {
     }
 }
 
+function wpfa_gen_initial_posts($id){
+    $fb_page = new wpfa_FbPage(APP_ID, APP_SECRET, APP_TOKEN);
+    $posts = $fb_page->wpfa_get_posts($id);
+    foreach ($posts as $p) {
+        $post = $fb_page->wpfa_get_post($p['id']);
+        $wp_post = new wpfa_Post($post);
+        $wp_post->wpfa_publish();
+    }
+}
+
 //Display infromative message to user upon plugin activation
 add_action('admin_notices', 'wpfa_displayWelcome');
 

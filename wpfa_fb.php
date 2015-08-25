@@ -22,19 +22,17 @@ class wpfa_FbPage{
         try {
             $response = $this->fb->get($request, $this->token);
         } catch(Facebook\Exceptions\FacebookResponseException $e) {
-            echo 'Graph returned an error: ' . $e->getMessage();
-            echo $request;
+            error_log('Graph returned an error: ' . $e->getMessage());
             exit;
         } catch(Facebook\Exceptions\FacebookSDKException $e) {
-            echo 'Facebook SDK returned an error: ' . $e->getMessage();
-            echo $request;
+            error_log('Facebook SDK returned an error: ' . $e->getMessage());
             exit;
         }
         return $response;
     }
 
     function wpfa_get_posts($page_ID){
-        $request = '/'.$page_ID.'/posts?fields=id,created_time';
+        $request = '/'.$page_ID.'/posts?limit=5&fields=id,created_time';
         $response = $this->wpfa_call_graph_api($request);
         return $response->getGraphEdge();
     }
