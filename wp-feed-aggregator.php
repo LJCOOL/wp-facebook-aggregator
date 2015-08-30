@@ -69,7 +69,7 @@ function wpfa_update() {
     $id_list = wpfa_getSettingsList();
     foreach ($id_list as $id) {
         //get the name of the facebook page to use as a category name
-        $page_name = $fb_page->wpfa_get_page_name($id);
+        $page_name = $fb_page->get_page_name($id);
         $cat_id = get_cat_ID($page_name);
         //create a new category if it does not already exist
         if($cat_id == 0){
@@ -77,14 +77,14 @@ function wpfa_update() {
             $cat_id = $return['term_id'];
         }
         //retrieve posts for a page
-        $posts = $fb_page->wpfa_get_posts($id);
+        $posts = $fb_page->get_posts($id);
         foreach ($posts as $p) {
             //compare time, add posts if newer than last update
             if ($p['created_time']->getTimeStamp() > $last_update){
-                $post = $fb_page->wpfa_get_post($p['id']);
+                $post = $fb_page->get_post($p['id']);
                 $wp_post = new wpfa_Post($post);
-                $wp_post->wpfa_set_post_category($cat_id);
-                $wp_post->wpfa_publish();
+                $wp_post->set_post_category($cat_id);
+                $wp_post->publish();
             }
         }
     }
@@ -93,19 +93,19 @@ function wpfa_update() {
 function wpfa_gen_initial_posts($id){
     $fb_page = new wpfa_FbPage(APP_ID, APP_SECRET, APP_TOKEN);
     //get the name of the facebook page to use as a category name
-    $page_name = $fb_page->wpfa_get_page_name($id);
+    $page_name = $fb_page->get_page_name($id);
     $cat_id = get_cat_ID($page_name);
     //create a new category if it does not already exist
     if($cat_id == 0){
         $return = wp_insert_term($page_name, 'category');
         $cat_id = $return['term_id'];
     }
-    $posts = $fb_page->wpfa_get_posts($id);
+    $posts = $fb_page->get_posts($id);
     foreach ($posts as $p) {
-        $post = $fb_page->wpfa_get_post($p['id']);
+        $post = $fb_page->get_post($p['id']);
         $wp_post = new wpfa_Post($post);
-        $wp_post->wpfa_set_post_category($cat_id);
-        $wp_post->wpfa_publish();
+        $wp_post->set_post_category($cat_id);
+        $wp_post->publish();
     }
 }
 
@@ -125,15 +125,15 @@ class wpfa_Post{
         $this->image = $post['image'];
     }
 
-    function wpfa_set_post_category($category){
+    function set_post_category($category){
         $this->category = $category;
     }
 
-    function wpfa_publish(){
+    function publish(){
         //create a post
         $p = array(
             'post_name' => $this->id,
-            'post_title' => $this->wpfa_getTitle(),
+            'post_title' => $this->get_title(),
             'post_content' => $this->message,
             'post_excerpt' => $this->message
         );
@@ -158,7 +158,7 @@ class wpfa_Post{
     }
 
     //strips 4 words from the main content to use as the title
-    function wpfa_getTitle() {
+    function get_title() {
       //safe strip, handles stuff like commas and dashes
       preg_match("/(?:\w+(?:\W+|$)){0,4}/", $this->message, $title);
       //add a trailing ellipsis
