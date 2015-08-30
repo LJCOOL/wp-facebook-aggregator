@@ -42,7 +42,7 @@ function generate_page() { ?>
         <tr valign="top">
         <th scope="row">Facebook Page ID 1</th>
         <td><input type="text" name="page-ID1" value="<?php echo esc_attr( get_option('page-ID1') ); ?>" />
-        <i>eg. rmitarchitecture or 123542974439976</i>  <a href="https://lookup-id.com/" target="_blank">Still don't know?</a></td>
+        <i>eg. 123542974439976</i>  <a href="https://lookup-id.com/" target="_blank">Still don't know?</a></td>
         </tr>
         <tr valign="top">
         <th scope="row">Facebook Page ID 2</th>
