@@ -37,6 +37,13 @@ class wpfa_FbPage{
         return $response->getGraphEdge();
     }
 
+    function wpfa_get_page_name($page_ID){
+        $request = '/'.$page_ID.'?fields=name';
+        $response = $this->wpfa_call_graph_api($request);
+        $object = $response->getGraphNode();
+        return $object['name'];
+    }
+
     function wpfa_get_post($post_id){
         $p['id'] = $post_id;
 

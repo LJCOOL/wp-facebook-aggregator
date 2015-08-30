@@ -9,6 +9,7 @@ Author: Jay Newton, Shaawin Vsingam
 require_once(ABSPATH . 'wp-admin/includes/media.php');
 require_once(ABSPATH . 'wp-admin/includes/file.php');
 require_once(ABSPATH . 'wp-admin/includes/image.php');
+require_once(ABSPATH . 'wp-admin/includes/taxonomy.php');
 //include settings
 include_once __DIR__ . '/options.php';
 //include facade to settings
@@ -63,14 +64,26 @@ function wpfa_update() {
     update_option('wpfa_last_update_time', time());
 
     $fb_page = new wpfa_FbPage(APP_ID, APP_SECRET, APP_TOKEN);
+
+    //get the list of facebook pages
     $id_list = wpfa_getSettingsList();
     foreach ($id_list as $id) {
+        //get the name of the facebook page to use as a category name
+        $page_name = $fb_page->wpfa_get_page_name($id);
+        $cat_id = get_cat_ID($page_name);
+        //create a new category if it does not already exist
+        if($cat_id == 0){
+            $return = wp_insert_term($page_name, 'category');
+            $cat_id = $return['term_id'];
+        }
+        //retrieve posts for a page
         $posts = $fb_page->wpfa_get_posts($id);
         foreach ($posts as $p) {
             //compare time, add posts if newer than last update
             if ($p['created_time']->getTimeStamp() > $last_update){
                 $post = $fb_page->wpfa_get_post($p['id']);
                 $wp_post = new wpfa_Post($post);
+                $wp_post->wpfa_set_post_category($cat_id);
                 $wp_post->wpfa_publish();
             }
         }
@@ -79,10 +92,19 @@ function wpfa_update() {
 
 function wpfa_gen_initial_posts($id){
     $fb_page = new wpfa_FbPage(APP_ID, APP_SECRET, APP_TOKEN);
+    //get the name of the facebook page to use as a category name
+    $page_name = $fb_page->wpfa_get_page_name($id);
+    $cat_id = get_cat_ID($page_name);
+    //create a new category if it does not already exist
+    if($cat_id == 0){
+        $return = wp_insert_term($page_name, 'category');
+        $cat_id = $return['term_id'];
+    }
     $posts = $fb_page->wpfa_get_posts($id);
     foreach ($posts as $p) {
         $post = $fb_page->wpfa_get_post($p['id']);
         $wp_post = new wpfa_Post($post);
+        $wp_post->wpfa_set_post_category($cat_id);
         $wp_post->wpfa_publish();
     }
 }
@@ -95,11 +117,16 @@ class wpfa_Post{
     private $id;
     private $message;
     private $image;
+    private $category;
 
     function __construct($post){
         $this->id = $post['id'];
         $this->message = $post['message'];
         $this->image = $post['image'];
+    }
+
+    function wpfa_set_post_category($category){
+        $this->category = $category;
     }
 
     function wpfa_publish(){
@@ -121,6 +148,10 @@ class wpfa_Post{
         );
         $attach_id = media_handle_sideload($file, $post_id);
         add_post_meta($post_id, '_thumbnail_id', $attach_id);
+
+        //set the post's category
+        $post_categories = array($this->category);
+        wp_set_post_categories($post_id, $post_categories);
 
         //publish post
         wp_publish_post($post_id);
