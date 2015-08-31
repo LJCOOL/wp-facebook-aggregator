@@ -141,13 +141,15 @@ class wpfa_Post{
         $post_id = wp_insert_post($p);
 
         //attach photo to post
-        $tmp = download_url($this->image);
-        $file = array(
-            'name' => basename($this->image),
-            'tmp_name' => $tmp
-        );
-        $attach_id = media_handle_sideload($file, $post_id);
-        add_post_meta($post_id, '_thumbnail_id', $attach_id);
+        if ($this->image){
+            $tmp = download_url($this->image);
+            $file = array(
+                'name' => basename($this->image),
+                'tmp_name' => $tmp
+            );
+            $attach_id = media_handle_sideload($file, $post_id);
+            add_post_meta($post_id, '_thumbnail_id', $attach_id);
+        }
 
         //set the post's category
         $post_categories = array($this->category);

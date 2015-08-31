@@ -61,7 +61,7 @@ class wpfa_FbPage{
             $p['image'] = $object['images'][0]['source'];
         }
         else {
-            $p['image'] = NULL;
+            $p['image'] = 0;
         }
 
         return $p;
