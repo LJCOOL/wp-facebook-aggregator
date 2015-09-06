@@ -50,12 +50,10 @@ class wpfa_FbPage{
         $request = '/'.$post_id.'?fields=object_id,message,status_type';
         $response = $this->call_graph_api($request);
         $post = $response->getGraphNode();
-        $p['content'] = $post['message'];
 
         //append a hyperlink back to facebook
         $fb_link = '<br><br><a href="http://www.facebook.com/'. $post_id .'">View on Facebook</a>';
-        $p['content'] = $p['content'] . $fb_link;
-        error_log($post['status_type']);
+        $p['content'] = $post['message'] . $fb_link;
 
         //retrieve photo node with list images associated with it
         if ($post['status_type'] == 'added_photos'){
