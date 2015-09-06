@@ -115,13 +115,13 @@ add_action('admin_notices', 'wpfa_displayWelcome');
 
 class wpfa_Post{
     private $id;
-    private $message;
+    private $content;
     private $image;
     private $category;
 
     function __construct($post){
         $this->id = $post['id'];
-        $this->message = $post['message'];
+        $this->content = $post['content'];
         $this->image = $post['image'];
     }
 
@@ -134,8 +134,8 @@ class wpfa_Post{
         $p = array(
             'post_name' => $this->id,
             'post_title' => $this->get_title(),
-            'post_content' => $this->message,
-            'post_excerpt' => $this->message
+            'post_content' => $this->content,
+            'post_excerpt' => $this->content
         );
         //insert post
         $post_id = wp_insert_post($p);
@@ -162,7 +162,7 @@ class wpfa_Post{
     //strips 4 words from the main content to use as the title
     function get_title() {
       //safe strip, handles stuff like commas and dashes
-      preg_match("/(?:\w+(?:\W+|$)){0,4}/", $this->message, $title);
+      preg_match("/(?:\w+(?:\W+|$)){0,4}/", $this->content, $title);
       //add a trailing ellipsis
       $title[0] .= "...";
       return $title[0];
