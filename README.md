@@ -6,3 +6,9 @@ This plugin will generate Wordpress posts based off public Facebook posts retrie
 - Images
 - Text based status updates
 - Status updates with images
+
+## TODO
+- [x] “View Facebook” link on each post
+- [ ] Facebook Albums should display the first image first and then should allow for scrolling through in the whole post.
+- [x] Different Facebook pages to be in their own categories
+- [ ] Options to specify links, videos, images etc in the posts.
