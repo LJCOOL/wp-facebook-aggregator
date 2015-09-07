@@ -68,7 +68,7 @@ function generate_page() { ?>
         <td><input type="text" name="page-ID5" value="<?php echo esc_attr( get_option('page-ID5') ); ?>" /></td>
         </tr>
     </table>
-    <button onclick="addField()">Name</button>
+    <button onclick="addField()">ID</button>
     <?php submit_button(); ?>
     </form>
     </div>
