@@ -20,6 +20,8 @@ function feed_options() {
 
 //register settings
 add_action('admin_init','register_options');
+//enqueue scripts
+add_action( 'admin_enqueue_scripts', 'wpfa_scripts' );
 
 //defines attributes to be saved
 function register_options() {
@@ -29,6 +31,11 @@ function register_options() {
     register_setting('id-group','page-ID3');
     register_setting('id-group','page-ID4');
     register_setting('id-group','page-ID5');
+}
+
+//add javascript file to be used by options page
+function wpfa_scripts() {
+    wp_enqueue_script( 'wpfa_javascript', plugin_dir_url( __FILE__ ) . 'wpfa_javascript.js' );
 }
 
 //HTML to generate page with forms, buttons etc.
@@ -61,6 +68,7 @@ function generate_page() { ?>
         <td><input type="text" name="page-ID5" value="<?php echo esc_attr( get_option('page-ID5') ); ?>" /></td>
         </tr>
     </table>
+    <button onclick="addField()">Name</button>
     <?php submit_button(); ?>
     </form>
     </div>
