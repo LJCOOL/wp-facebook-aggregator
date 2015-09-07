@@ -31,6 +31,21 @@ function register_options() {
     register_setting('id-group','page-ID3');
     register_setting('id-group','page-ID4');
     register_setting('id-group','page-ID5');
+    register_setting('id-group','page-ID6');
+    register_setting('id-group','page-ID7');
+    register_setting('id-group','page-ID8');
+    register_setting('id-group','page-ID9');
+    register_setting('id-group','page-ID10');
+    register_setting('id-group','page-ID11');
+    register_setting('id-group','page-ID12');
+    register_setting('id-group','page-ID13');
+    register_setting('id-group','page-ID14');
+    register_setting('id-group','page-ID15');
+    register_setting('id-group','page-ID16');
+    register_setting('id-group','page-ID17');
+    register_setting('id-group','page-ID18');
+    register_setting('id-group','page-ID19');
+    register_setting('id-group','page-ID20');
 }
 
 //add javascript file to be used by options page
