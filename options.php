@@ -25,7 +25,7 @@ add_action( 'admin_enqueue_scripts', 'wpfa_scripts' );
 
 //defines attributes to be saved
 function register_options() {
-    //register settings to be saved
+    //sane quota for IDs
     register_setting('id-group','page-ID1');
     register_setting('id-group','page-ID2');
     register_setting('id-group','page-ID3');
