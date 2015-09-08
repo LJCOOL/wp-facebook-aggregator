@@ -61,6 +61,10 @@ function generate_page() { ?>
     <?php settings_fields( 'id-group' ); ?>
     <?php do_settings_sections( 'id-group' ); ?>
     <table class="form-table">
+        <!-- <div class="input_fields_wrap">
+        <button class="add_field_button">Add More Fields</button>
+        <div><input type="text" name="mytext[]"></div>
+        </div> -->
         <tr valign="top">
         <th scope="row">Facebook Page ID 1</th>
         <td><input type="text" name="page-ID1" value="<?php echo esc_attr( get_option('page-ID1') ); ?>" />
@@ -83,7 +87,7 @@ function generate_page() { ?>
         <td><input type="text" name="page-ID5" value="<?php echo esc_attr( get_option('page-ID5') ); ?>" /></td>
         </tr>
     </table>
-    <button onclick="addField()">ID</button>
+    </div>
     <?php submit_button(); ?>
     </form>
     </div>
