@@ -48,10 +48,10 @@ function register_options() {
     register_setting('wpfa-settings','page-ID20');
 
     //settings for links, videos, images etc
-    register_setting('wpfa-settings','images');
-    register_setting('wpfa-settings','links');
-    register_setting('wpfa-settings','videos');
-    register_setting('wpfa-settings','redirect');
+    register_setting('wpfa-settings','wpfa-images');
+    register_setting('wpfa-settings','wpfa-links');
+    register_setting('wpfa-settings','wpfa-videos');
+    register_setting('wpfa-settings','wpfa-redirect');
 }
 
 //add javascript file to be used by options page
@@ -101,19 +101,19 @@ function generate_page() { ?>
     <table class="form-table">
         <tr valign="top">
         <th scope="row">Show images</th>
-        <td><input type="checkbox" name="images" value="1" <?php checked( '1', get_option('images') ); ?> /></td>
+        <td><input type="checkbox" name="wpfa-images" value="1" <?php checked( '1', get_option('wpfa-images') ); ?> /></td>
         </tr>
         <tr valign="top">
         <th scope="row">Get posts that are links</th>
-        <td><input type="checkbox" name="links" value="1" <?php checked( '1', get_option('links') ); ?> /></td>
+        <td><input type="checkbox" name="wpfa-links" value="1" <?php checked( '1', get_option('wpfa-links') ); ?> /></td>
         </tr>
         <tr valign="top">
         <th scope="row">Get posts that have videos</th>
-        <td><input type="checkbox" name="videos" value="1" <?php checked( '1', get_option('videos') ); ?> /></td>
+        <td><input type="checkbox" name="wpfa-videos" value="1" <?php checked( '1', get_option('wpfa-videos') ); ?> /></td>
         </tr>
         <tr valign="top">
         <th scope="row">Redirect featured link to category</th>
-        <td><input type="checkbox" name="redirect" value="1" <?php checked( '1', get_option('redirect') ); ?> /></td>
+        <td><input type="checkbox" name="wpfa-redirect" value="1" <?php checked( '1', get_option('wpfa-redirect') ); ?> /></td>
         </tr>
     </table>
     <?php submit_button(); ?>
