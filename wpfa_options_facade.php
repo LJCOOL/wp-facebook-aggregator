@@ -14,6 +14,12 @@ function wpfa_generateInitialOptions() {
         update_option("page-ID$i",'');
     }
 
+    //default other options to true
+    update_option('wpfa-images', 1);
+    update_option('wpfa-links', 1);
+    update_option('wpfa-videos', 1);
+    update_option('wpfa-redirect', 1);
+
     //option to store time of last update
     update_option('wpfa_last_update_time', 0);
 }
@@ -36,7 +42,7 @@ function wpfa_checkOptions() {
             get_option("page-ID$i") != '') {
             //update our 'local' variable so it is in par with the settings
             update_option("fb_ID$i",get_option("page-ID$i"));
-            
+
             wpfa_gen_initial_posts(get_option("page-ID$i"));
             //call reset cron to retrieve new posts from facebook
             wpfa_reset_cron();
