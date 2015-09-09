@@ -66,7 +66,7 @@ function wpfa_update() {
     $fb_page = new wpfa_FbPage(APP_ID, APP_SECRET, APP_TOKEN);
 
     //get the list of facebook pages
-    $id_list = wpfa_getSettingsList();
+    $id_list = wpfa_getIDList();
     foreach ($id_list as $id) {
         //get the name of the facebook page to use as a category name
         $page_name = $fb_page->get_page_name($id);

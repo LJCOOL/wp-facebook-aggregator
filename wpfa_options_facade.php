@@ -25,7 +25,7 @@ function wpfa_generateInitialOptions() {
 }
 
 //retrieves list of facebook IDs set by user
-function wpfa_getSettingsList() {
+function wpfa_getIDList() {
     $list = array();
     for ($i = 1; $i <= 5; $i++) {
       if (get_option("page-ID$i") != '')
