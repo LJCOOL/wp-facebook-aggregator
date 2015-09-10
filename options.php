@@ -70,10 +70,6 @@ function generate_page() { ?>
     <?php settings_fields( 'wpfa-settings' ); ?>
     <?php do_settings_sections( 'wpfa-settings' ); ?>
     <table class="form-table">
-        <!-- <div class="input_fields_wrap">
-        <button class="add_field_button">Add More Fields</button>
-        <div><input type="text" name="mytext[]"></div>
-        </div> -->
         <tr valign="top">
         <th scope="row">Facebook Page ID 1</th>
         <td><input type="text" name="page-ID1" value="<?php echo esc_attr( get_option('page-ID1') ); ?>" />
@@ -118,5 +114,9 @@ function generate_page() { ?>
     </table>
     <?php submit_button(); ?>
     </form>
-    </div>
+    <!-- <div class="input_fields_wrap">
+        <button class="add_field_button">Add More Fields</button>
+        <div><input type="text" name="mytext[]"></div>
+        </div>
+    </div> -->
 <?php } ?>

@@ -8,9 +8,15 @@ jQuery(document).ready(function() {
         e.preventDefault();
         if(x < max_fields){ //max input box allowed
             x++; //text box increment
-            jQuery(wrapper).append('<div><input type="text" name="mytext[]"/><a href="#" class="remove_field">Remove</a></div>'); //add input box
+            $(wrapper).append(jQuery.ajax({
+		        url: "wpfa_js_helper.php",
+		        data:{},
+		        type: "POST",
+		        success:function(data){
+                    $('<div>').html(data);}
+	            })); //add input box
         }
-    });
+    };
 
     jQuery(wrapper).on("click",".remove_field", function(e){ //user click on remove text
         e.preventDefault(); jQuery(this).parent('div').remove(); x--;
