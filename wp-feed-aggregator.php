@@ -165,7 +165,7 @@ class wpfa_Post{
     //strips 4 words from the main content to use as the title
     function get_title() {
       //safe strip, handles stuff like commas and dashes
-      preg_match("/(?:\w+(?:\W+|$)){0,4}/", $this->content, $title);
+      preg_match("/(?:[^\s,\.;\?\!]+(?:[\s,\.;\?\!]+|$)){0,4}/", $this->content, $title);
       //add a trailing ellipsis
       $title[0] .= "...";
       return $title[0];
