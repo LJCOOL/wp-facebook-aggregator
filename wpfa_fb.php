@@ -32,7 +32,7 @@ class wpfa_FbPage{
     }
 
     function get_posts($page_ID){
-        $request = '/'.$page_ID.'/posts?limit=5&fields=id,created_time';
+        $request = '/'.$page_ID.'/posts?limit=10&fields=id,created_time';
         $response = $this->call_graph_api($request);
         return $response->getGraphEdge();
     }
@@ -51,20 +51,28 @@ class wpfa_FbPage{
         $response = $this->call_graph_api($request);
         $post = $response->getGraphNode();
 
-        //append a hyperlink back to facebook
+        //error_log($post['status_type']);
+        //handle different post types
+        switch ($post['status_type']) {
+            case 'added_photos':
+                //retrieve photo node with list of image qualities associated with it
+                $object_request = '/'.$post['object_id'].'?fields=images';
+                $response = $this->call_graph_api($object_request);
+                $object = $response->getGraphNode();
+                //get the hyperlink of the highest quality image
+                $p['image'] = $object['images'][0]['source'];
+                break;
+            case 'shared_story':
+                $p['image'] = NULL;
+                break;
+            default:
+                return NULL;
+                break;
+        }
+
+        //get the post's text content and append a hyperlink back to facebook
         $fb_link = '<br><br><a href="http://www.facebook.com/'. $post_id .'">View on Facebook</a>';
         $p['content'] = $post['message'] . $fb_link;
-
-        //retrieve photo node with list images associated with it
-        if ($post['status_type'] == 'added_photos'){
-            $object_request = '/'.$post['object_id'].'?fields=images';
-            $response = $this->call_graph_api($object_request);
-            $object = $response->getGraphNode();
-            $p['image'] = $object['images'][0]['source'];
-        }
-        else {
-            $p['image'] = 0;
-        }
 
         return $p;
     }
