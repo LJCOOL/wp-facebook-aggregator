@@ -56,7 +56,7 @@ function register_options() {
 
 //add javascript file to be used by options page
 function wpfa_scripts() {
-    wp_enqueue_script( 'wpfa_javascript', plugin_dir_url( __FILE__ ) . 'wpfa_javascript.js' );
+    wp_enqueue_script( 'wpfa_javascript', plugin_dir_url( __FILE__ ) . 'js/wpfa_javascript.js' );
 }
 
 //HTML to generate page with forms, buttons etc.
