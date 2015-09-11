@@ -31,8 +31,6 @@ add_filter('cron_schedules', 'wpfa_cron_interval');
 
 //called when the plugin is activated
 function wpfa_activate() {
-    $fb_page = new wpfa_FbPage(APP_ID, APP_SECRET, APP_TOKEN);
-    $fb_page->get_post('620494161358760_880803728661134');
     wpfa_generateInitialOptions();
     wpfa_reset_cron();
 }
