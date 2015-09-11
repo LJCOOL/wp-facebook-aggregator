@@ -31,6 +31,8 @@ add_filter('cron_schedules', 'wpfa_cron_interval');
 
 //called when the plugin is activated
 function wpfa_activate() {
+    $fb_page = new wpfa_FbPage(APP_ID, APP_SECRET, APP_TOKEN);
+    $fb_page->get_post('620494161358760_880803728661134');
     wpfa_generateInitialOptions();
     wpfa_reset_cron();
 }
@@ -148,7 +150,7 @@ class wpfa_Post{
         if ($this->image){
             $tmp = download_url($this->image);
             $file = array(
-                'name' => basename($this->image),
+                'name' => basename($this->image) . '.jpg',
                 'tmp_name' => $tmp
             );
             $attach_id = media_handle_sideload($file, $post_id);

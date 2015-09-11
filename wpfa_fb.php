@@ -78,7 +78,6 @@ class wpfa_FbPage{
         //get the post's text content and append a hyperlink back to facebook
         $fb_link = '<br><br><a href="http://www.facebook.com/'. $post_id .'">View on Facebook</a>';
         $p['content'] = $post['message'] . $fb_link;
-
         return $p;
     }
 }
