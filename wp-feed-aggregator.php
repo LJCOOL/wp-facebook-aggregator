@@ -68,7 +68,7 @@ function wpfa_update() {
     //get the list of facebook pages
     $id_list = wpfa_getIDList();
     foreach ($id_list as $id) {
-        wpfa_check_category($fb_page, $id);
+        $cat_id = wpfa_check_category($fb_page, $id);
         //retrieve posts for a page
         $posts = $fb_page->get_posts($id);
         foreach ($posts as $p) {
@@ -95,11 +95,12 @@ function wpfa_check_category($fb_page, $id){
         $return = wp_insert_term($page_name, 'category');
         $cat_id = $return['term_id'];
     }
+    return $cat_id;
 }
 
 function wpfa_gen_initial_posts($id){
     $fb_page = new wpfa_FbPage(APP_ID, APP_SECRET, APP_TOKEN);
-    wpfa_check_category($fb_page, $id);
+    $cat_id = wpfa_check_category($fb_page, $id);
     $posts = $fb_page->get_posts($id);
     foreach ($posts as $p) {
         $post = $fb_page->get_post($p['id']);
