@@ -82,9 +82,12 @@ function wpfa_update() {
             //compare time, add posts if newer than last update
             if ($p['created_time']->getTimeStamp() > $last_update){
                 $post = $fb_page->get_post($p['id']);
-                $wp_post = new wpfa_Post($post);
-                $wp_post->set_post_category($cat_id);
-                $wp_post->publish();
+                //only generate posts that we can handle properly
+                if ($post) {
+                    $wp_post = new wpfa_Post($post);
+                    $wp_post->set_post_category($cat_id);
+                    $wp_post->publish();
+                }
             }
         }
     }
