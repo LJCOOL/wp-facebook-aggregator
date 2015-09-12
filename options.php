@@ -97,19 +97,19 @@ function generate_page() { ?>
     <table class="form-table">
         <tr valign="top">
         <th scope="row">Show images</th>
-        <td><input type="checkbox" name="wpfa-images" value="1" <?php checked( '1', get_option('wpfa-images') ); ?> /></td>
+        <td><input type="checkbox" name="wpfa-images" disabled="disabled" value="1" <?php checked( '1', get_option('wpfa-images') ); ?> /></td>
         </tr>
         <tr valign="top">
         <th scope="row">Get posts that are links</th>
-        <td><input type="checkbox" name="wpfa-links" value="1" <?php checked( '1', get_option('wpfa-links') ); ?> /></td>
+        <td><input type="checkbox" name="wpfa-links" disabled="disabled" value="1" <?php checked( '1', get_option('wpfa-links') ); ?> /></td>
         </tr>
         <tr valign="top">
         <th scope="row">Get posts that have videos</th>
-        <td><input type="checkbox" name="wpfa-videos" value="1" <?php checked( '1', get_option('wpfa-videos') ); ?> /></td>
+        <td><input type="checkbox" name="wpfa-videos" disabled="disabled" value="1" <?php checked( '1', get_option('wpfa-videos') ); ?> /></td>
         </tr>
         <tr valign="top">
         <th scope="row">Redirect featured link to category</th>
-        <td><input type="checkbox" name="wpfa-redirect" value="1" <?php checked( '1', get_option('wpfa-redirect') ); ?> /></td>
+        <td><input type="checkbox" name="wpfa-redirect" disabled="disabled" value="1" <?php checked( '1', get_option('wpfa-redirect') ); ?> /></td>
         </tr>
     </table>
     <?php submit_button(); ?>
