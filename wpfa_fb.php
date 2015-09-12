@@ -79,7 +79,7 @@ class wpfa_FbPage{
         $message = preg_replace("/http(s|):\/\/\S+/", '<a href="$0">$0</a>', $post['message']);
 
         //get the post's text content and append a hyperlink back to facebook
-        $fb_link = '<br><br><a href="http://www.facebook.com/'. $post_id .'">View on Facebook</a>';
+        $fb_link = '<br><br><a href="http://www.facebook.com/'. $post_id .'"><i>View original post on Facebook</i></a>';
         $p['content'] = $message . $fb_link;
         return $p;
     }
