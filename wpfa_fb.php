@@ -44,8 +44,16 @@ class wpfa_FbPage{
         return $object['name'];
     }
 
+    function get_attachments($post_id){
+        $request = '/'.$post_id.'/attachments';
+        $response = $this->call_graph_api($request);
+        return $response->getGraphEdge();
+    }
+
     function get_post($post_id){
         $p['id'] = $post_id;
+        $p['images'] = array();
+        //error_log($post_id);
 
         $request = '/'.$post_id.'?fields=object_id,message,status_type';
         $response = $this->call_graph_api($request);
@@ -55,15 +63,29 @@ class wpfa_FbPage{
         //handle different post types
         switch ($post['status_type']) {
             case 'added_photos':
-                //retrieve photo node with list of image qualities associated with it
-                $object_request = '/'.$post['object_id'].'?fields=images';
-                $response = $this->call_graph_api($object_request);
-                $object = $response->getGraphNode();
+                $attachments = $this->get_attachments($post_id);
+                foreach ($attachments as $a){
+                    error_log($a['type']);
+                    switch ($a['type']) {
+                        case 'album':
+                            foreach ($a['subattachments'] as $sub) {
+                                array_push($p['images'], $sub['media']['image']['src']);
+                            }
+                            break;
+
+                        case 'photo':
+                            array_push($p['images'], $a['media']['image']['src']);
+                            break;
+                        default:
+                            $p['images'] = NULL;
+                            break;
+                    }
+                }
                 //get the hyperlink of the highest quality image
-                $p['image'] = $object['images'][0]['source'];
+                //$p['image'] = $object['images'][0]['source'];
                 break;
             case 'shared_story':
-                $p['image'] = NULL;
+                $p['images'] = NULL;
                 break;
             default:
                 return NULL;

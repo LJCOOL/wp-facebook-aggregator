@@ -120,13 +120,14 @@ add_action('admin_notices', 'wpfa_displayWelcome');
 class wpfa_Post{
     private $id;
     private $content;
-    private $image;
+    private $images;
     private $category;
 
     function __construct($post){
         $this->id = $post['id'];
         $this->content = $post['content'];
-        $this->image = $post['image'];
+        $this->images = $post['images'];
+        error_log(print_r($this->images, true));
     }
 
     function set_post_category($category){
@@ -145,10 +146,10 @@ class wpfa_Post{
         $post_id = wp_insert_post($p);
 
         //attach photo to post
-        if ($this->image){
-            $tmp = download_url($this->image);
+        if ($this->images){
+            $tmp = download_url($this->images[0]);
             $file = array(
-                'name' => basename($this->image) . '.jpg',
+                'name' => basename($this->images[0]) . '.jpg',
                 'tmp_name' => $tmp
             );
             $attach_id = media_handle_sideload($file, $post_id);
