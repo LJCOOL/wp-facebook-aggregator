@@ -135,7 +135,12 @@ class wpfa_Post{
     }
 
     function publish(){
-        //create a post
+        //append [gallery] tag if there multiple images to add to the post
+        if (count($this->images) > 1) {
+            $this->content .= '<br> [gallery type="rectangular"]';
+        }
+
+        //create the post array
         $p = array(
             'post_name' => $this->id,
             'post_title' => $this->get_title(),
@@ -145,7 +150,7 @@ class wpfa_Post{
         //insert post
         $post_id = wp_insert_post($p);
 
-        //attach photo to post
+        //attach featured image to post
         if ($this->images){
             $tmp = download_url($this->images[0]);
             $file = array(
@@ -154,6 +159,13 @@ class wpfa_Post{
             );
             $attach_id = media_handle_sideload($file, $post_id);
             add_post_meta($post_id, '_thumbnail_id', $attach_id);
+        }
+
+        //attach additional images to post
+        if (count($this->images) > 1) {
+            foreach ($this->images as $img) {
+                media_sideload_image($img, $post_id);
+            }
         }
 
         //set the post's category
