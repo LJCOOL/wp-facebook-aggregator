@@ -127,7 +127,6 @@ class wpfa_Post{
         $this->id = $post['id'];
         $this->content = $post['content'];
         $this->images = $post['images'];
-        error_log(print_r($this->images, true));
     }
 
     function set_post_category($category){
@@ -163,8 +162,9 @@ class wpfa_Post{
 
         //attach additional images to post
         if (count($this->images) > 1) {
-            foreach ($this->images as $img) {
-                media_sideload_image($img, $post_id);
+            //skip duplicating the first image as it is already the featured image
+            for ($i=1; $i < count($this->images); $i++) {
+                media_sideload_image($this->images[$i], $post_id);
             }
         }
 

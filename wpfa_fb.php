@@ -51,19 +51,16 @@ class wpfa_FbPage{
     function get_post($post_id){
         $p['id'] = $post_id;
         $p['images'] = array();
-        //error_log($post_id);
 
         $request = '/'.$post_id.'?fields=object_id,message,status_type';
         $response = $this->call_graph_api($request);
         $post = $response->getGraphNode();
 
-        //error_log($post['status_type']);
         //handle different post types
         switch ($post['status_type']) {
             case 'added_photos':
                 $attachments = $this->get_attachments($post_id);
                 foreach ($attachments as $a){
-                    error_log($a['type']);
                     switch ($a['type']) {
                         case 'album':
                             foreach ($a['subattachments'] as $sub) {
@@ -79,8 +76,6 @@ class wpfa_FbPage{
                             break;
                     }
                 }
-                //get the hyperlink of the highest quality image
-                //$p['image'] = $object['images'][0]['source'];
                 break;
             case 'shared_story':
                 $p['images'] = NULL;
