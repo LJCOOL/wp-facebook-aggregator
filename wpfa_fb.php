@@ -22,11 +22,9 @@ class wpfa_FbPage{
         try {
             $response = $this->fb->get($request, $this->token);
         } catch(Facebook\Exceptions\FacebookResponseException $e) {
-            error_log('Graph returned an error: ' . $e->getMessage());
-            exit;
+            error_log('Graph returned an error: ' . $e->getMessage() . 'with request: ' . $request);
         } catch(Facebook\Exceptions\FacebookSDKException $e) {
-            error_log('Facebook SDK returned an error: ' . $e->getMessage());
-            exit;
+            error_log('Facebook SDK returned an error: ' . $e->getMessage() . 'with request: ' . $request);
         }
         return $response;
     }
@@ -97,9 +95,12 @@ class wpfa_FbPage{
             return NULL;
         }
 
+        //insert hyperlink tags around links
+        $message = preg_replace("/http(s|):\/\/\S+/", '<a href="$0">$0</a>', $post['message']);
+
         //get the post's text content and append a hyperlink back to facebook
-        $fb_link = '<br><br><a href="http://www.facebook.com/'. $post_id .'">View on Facebook</a>';
-        $p['content'] = $post['message'] . $fb_link;
+        $fb_link = '<br><br><a href="http://www.facebook.com/'. $post_id .'"><i>View original post on Facebook</i></a>';
+        $p['content'] = $message . $fb_link;
         return $p;
     }
 }

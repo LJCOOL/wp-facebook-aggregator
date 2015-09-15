@@ -170,6 +170,11 @@ class wpfa_Post{
       preg_match("/(?:[^\s,\.;\?\!]+(?:[\s,\.;\?\!]+|$)){0,4}/", $this->content, $title);
       //add a trailing ellipsis
       $title[0] .= "...";
+      //check for a link in the title
+      if (preg_match("/http(s|):\/\/\S+/", $title[0]) === 1)
+      {
+          return 'Shared Link';
+      }
       return $title[0];
     }
 }
