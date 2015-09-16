@@ -136,7 +136,7 @@ class wpfa_Post{
     function publish(){
         //append [gallery] tag if there multiple images to add to the post
         if (count($this->images) > 1) {
-            $this->content .= '<br> [gallery type="rectangular"]';
+            $this->content .= '<br> [gallery]';
         }
 
         //create the post array
