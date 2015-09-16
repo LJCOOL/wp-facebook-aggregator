@@ -52,7 +52,7 @@ class wpfa_FbPage{
         $p['id'] = $post_id;
         $p['images'] = array();
 
-        $request = '/'.$post_id.'?fields=object_id,message,status_type';
+        $request = '/'.$post_id.'?fields=picture,message,status_type';
         $response = $this->call_graph_api($request);
         $post = $response->getGraphNode();
 
@@ -69,7 +69,7 @@ class wpfa_FbPage{
                             break;
 
                         case 'photo':
-                            array_push($p['images'], $a['media']['image']['src']);
+                            $p['images'][0] = $a['media']['image']['src'];
                             break;
                         default:
                             $p['images'] = NULL;
@@ -83,6 +83,13 @@ class wpfa_FbPage{
             default:
                 return NULL;
                 break;
+        }
+
+        //attempt to scrape an image from a shared link
+        if ($p['images'] == NULL) {
+            if ($post['picture']) {
+                $p['images'][0] = $post['picture']; 
+            }
         }
 
         //don't generate empty posts
