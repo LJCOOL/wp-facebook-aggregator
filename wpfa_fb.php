@@ -59,41 +59,35 @@ class wpfa_FbPage{
         //handle different post types
         switch ($post['status_type']) {
             case 'added_photos':
-                $attachments = $this->get_attachments($post_id);
-                foreach ($attachments as $a){
-                    switch ($a['type']) {
-                        case 'album':
-                            foreach ($a['subattachments'] as $sub) {
-                                array_push($p['images'], $sub['media']['image']['src']);
-                            }
-                            break;
+                $a = $this->get_attachments($post_id);
+                switch ($a[0]['type']) {
+                    case 'album':
+                        foreach ($a[0]['subattachments'] as $sub) {
+                            array_push($p['images'], $sub['media']['image']['src']);
+                        }
+                        break;
 
-                        case 'photo':
-                            $p['images'][0] = $a['media']['image']['src'];
-                            break;
-                        default:
-                            $p['images'] = NULL;
-                            break;
-                    }
+                    case 'photo':
+                        $p['images'][0] = $a[0]['media']['image']['src'];
+                        break;
+                    default:
+                        $p['images'] = NULL;
+                        break;
                 }
                 break;
             case 'shared_story':
-                $p['images'] = NULL;
+                //attempt to scrape in image if it exists
+                if ($post['picture']) {
+                    $a = $this->get_attachments($post_id);
+                    $p['images'][0] = $a[0]['media']['image']['src'];
+                }
+                else {
+                    $p['images'] = NULL;
+                }
                 break;
             default:
                 return NULL;
                 break;
-        }
-
-        //attempt to scrape an image from a shared link
-        if ($p['images'] == NULL) {
-            if ($post['picture']) {
-                $p['images'] = array();
-                $attachments = $this->get_attachments($post_id);
-                foreach ($attachments as $a){
-                    $p['images'][0] = $a['media']['image']['src'];
-                }
-            }
         }
 
         //don't generate empty posts
