@@ -18,11 +18,6 @@ function feed_options() {
                   'generate_page');
 }
 
-//register settings
-add_action('admin_init','register_options');
-//enqueue scripts
-add_action( 'admin_enqueue_scripts', 'wpfa_scripts' );
-
 //defines attributes to be saved
 function register_options() {
     //sane quota for IDs
@@ -56,8 +51,14 @@ function register_options() {
 
 //add javascript file to be used by options page
 function wpfa_scripts() {
-    wp_enqueue_script( 'wpfa_javascript', plugin_dir_url( __FILE__ ) . 'js/wpfa_javascript.js' );
+    wp_register_script('wpfa_javascript', plugins_url('js/wpfa_javascript.js', __FILE__));
+    wp_enqueue_script('wpfa_javascript');
 }
+
+//register settings
+add_action('admin_init','register_options');
+//enqueue scripts
+add_action('admin_enqueue_scripts', 'wpfa_scripts');
 
 //HTML to generate page with forms, buttons etc.
 function generate_page() { ?>
@@ -114,9 +115,9 @@ function generate_page() { ?>
     </table>
     <?php submit_button(); ?>
     </form>
+    </div>
     <!-- <div class="input_fields_wrap">
         <button class="add_field_button">Add More Fields</button>
         <div><input type="text" name="mytext[]"></div>
-        </div>
     </div> -->
 <?php } ?>
