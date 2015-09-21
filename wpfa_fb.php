@@ -42,26 +42,48 @@ class wpfa_FbPage{
         return $object['name'];
     }
 
+    function get_attachments($post_id){
+        $request = '/'.$post_id.'/attachments';
+        $response = $this->call_graph_api($request);
+        return $response->getGraphEdge();
+    }
+
     function get_post($post_id){
         $p['id'] = $post_id;
+        $p['images'] = array();
 
-        $request = '/'.$post_id.'?fields=object_id,message,status_type';
+        $request = '/'.$post_id.'?fields=picture,message,status_type';
         $response = $this->call_graph_api($request);
         $post = $response->getGraphNode();
 
-        //error_log($post['status_type']);
         //handle different post types
         switch ($post['status_type']) {
             case 'added_photos':
-                //retrieve photo node with list of image qualities associated with it
-                $object_request = '/'.$post['object_id'].'?fields=images';
-                $response = $this->call_graph_api($object_request);
-                $object = $response->getGraphNode();
-                //get the hyperlink of the highest quality image
-                $p['image'] = $object['images'][0]['source'];
+                $a = $this->get_attachments($post_id);
+                switch ($a[0]['type']) {
+                    case 'album':
+                        foreach ($a[0]['subattachments'] as $sub) {
+                            array_push($p['images'], $sub['media']['image']['src']);
+                        }
+                        break;
+
+                    case 'photo':
+                        $p['images'][0] = $a[0]['media']['image']['src'];
+                        break;
+                    default:
+                        $p['images'] = NULL;
+                        break;
+                }
                 break;
             case 'shared_story':
-                $p['image'] = NULL;
+                //attempt to scrape in image if it exists
+                if ($post['picture']) {
+                    $a = $this->get_attachments($post_id);
+                    $p['images'][0] = $a[0]['media']['image']['src'];
+                }
+                else {
+                    $p['images'] = NULL;
+                }
                 break;
             default:
                 return NULL;

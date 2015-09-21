@@ -120,13 +120,13 @@ add_action('admin_notices', 'wpfa_displayWelcome');
 class wpfa_Post{
     private $id;
     private $content;
-    private $image;
+    private $images;
     private $category;
 
     function __construct($post){
         $this->id = $post['id'];
         $this->content = $post['content'];
-        $this->image = $post['image'];
+        $this->images = $post['images'];
     }
 
     function set_post_category($category){
@@ -134,7 +134,12 @@ class wpfa_Post{
     }
 
     function publish(){
-        //create a post
+        //append [gallery] tag if there multiple images to add to the post
+        if (count($this->images) > 1) {
+            $this->content .= '<br> [gallery]';
+        }
+
+        //create the post array
         $p = array(
             'post_name' => $this->id,
             'post_title' => $this->get_title(),
@@ -144,15 +149,24 @@ class wpfa_Post{
         //insert post
         $post_id = wp_insert_post($p);
 
-        //attach photo to post
-        if ($this->image){
-            $tmp = download_url($this->image);
+        //attach featured image to post
+        if ($this->images){
+            $tmp = download_url($this->images[0]);
+            preg_match('/[^\?]+\.(jpg|jpe|jpeg|gif|png)/i', $this->images[0], $matches);
             $file = array(
-                'name' => basename($this->image) . '.jpg',
+                'name' => basename($matches[0]),
                 'tmp_name' => $tmp
             );
             $attach_id = media_handle_sideload($file, $post_id);
             add_post_meta($post_id, '_thumbnail_id', $attach_id);
+        }
+
+        //attach additional images to post
+        if (count($this->images) > 1) {
+            //skip duplicating the first image as it is already the featured image
+            for ($i=1; $i < count($this->images); $i++) {
+                media_sideload_image($this->images[$i], $post_id);
+            }
         }
 
         //set the post's category
