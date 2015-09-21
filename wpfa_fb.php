@@ -88,7 +88,11 @@ class wpfa_FbPage{
         //attempt to scrape an image from a shared link
         if ($p['images'] == NULL) {
             if ($post['picture']) {
-                $p['images'][0] = $post['picture']; 
+                $p['images'] = array();
+                $attachments = $this->get_attachments($post_id);
+                foreach ($attachments as $a){
+                    $p['images'][0] = $a['media']['image']['src'];
+                }
             }
         }
 
