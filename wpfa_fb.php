@@ -22,11 +22,9 @@ class wpfa_FbPage{
         try {
             $response = $this->fb->get($request, $this->token);
         } catch(Facebook\Exceptions\FacebookResponseException $e) {
-            error_log('Graph returned an error: ' . $e->getMessage());
-            exit;
+            error_log('Graph returned an error: ' . $e->getMessage() . 'with request: ' . $request);
         } catch(Facebook\Exceptions\FacebookSDKException $e) {
-            error_log('Facebook SDK returned an error: ' . $e->getMessage());
-            exit;
+            error_log('Facebook SDK returned an error: ' . $e->getMessage() . 'with request: ' . $request);
         }
         return $response;
     }
