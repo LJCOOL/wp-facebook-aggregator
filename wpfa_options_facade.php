@@ -38,12 +38,13 @@ function wpfa_getIDList() {
 function wpfa_checkOptions() {
     for ($i = 1; $i <=5; $i++ ) {
         // if the 'local' ID is different from what's in the settings and not empty
-        if (get_option("page-ID$i") != get_option("fb_ID$i") &&
-            get_option("page-ID$i") != '') {
+        $setID = get_option("page-ID$i");
+        if ($setID != get_option("fb_ID$i") &&
+            $setID != '') {
             //update our 'local' variable so it is in par with the settings
-            update_option("fb_ID$i",get_option("page-ID$i"));
+            update_option("fb_ID$i",$setID);
 
-            wpfa_gen_initial_posts(get_option("page-ID$i"));
+            wpfa_gen_initial_posts($setID);
             //call reset cron to retrieve new posts from facebook
             wpfa_reset_cron();
         }
