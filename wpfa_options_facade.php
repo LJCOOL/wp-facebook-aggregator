@@ -43,7 +43,7 @@ function wpfa_checkOptions() {
             $setID != '') {
             //update our 'local' variable so it is in par with the settings
             update_option("fb_ID$i",$setID);
-
+            sleep(0.1);
             wpfa_gen_initial_posts($setID);
             //call reset cron to retrieve new posts from facebook
             wpfa_reset_cron();
