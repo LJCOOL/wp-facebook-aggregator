@@ -42,10 +42,10 @@ function wpfa_checkOptions() {
         if ($setID != get_option("fb_ID$i") && $setID != '') {
             //update our 'local' variable so it is in par with the settings
             update_option("fb_ID$i",$setID);
-            //rest for a while
-            sleep(0.1);
             //generate initial posts if any user set fb ID has changed
             wpfa_gen_initial_posts($setID);
+            //rest for a while
+            sleep(0.1);
             //call reset cron to retrieve new posts from facebook
             wpfa_reset_cron();
         }
