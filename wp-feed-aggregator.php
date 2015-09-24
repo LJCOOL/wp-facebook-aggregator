@@ -3,14 +3,13 @@
 Plugin Name: Wordpress Feed Aggregator
 Plugin URI: http://github.com/LJCOOL/wp-feed-aggregator
 Description: Pulls and displays posts from multiple Facebook pages.
-Version: 1.0.5
+Version: 1.0.6
 Author: Jay Newton, Shaawin Vsingam
 */
-require_once(ABSPATH . 'wp-admin/includes/media.php');
-require_once(ABSPATH . 'wp-admin/includes/file.php');
+
 require_once(ABSPATH . 'wp-admin/includes/post.php');
-require_once(ABSPATH . 'wp-admin/includes/image.php');
 require_once(ABSPATH . 'wp-admin/includes/taxonomy.php');
+
 //include settings
 include_once __DIR__ . '/options.php';
 //include facade to settings
@@ -19,6 +18,8 @@ include_once __DIR__ . '/wpfa_options_facade.php';
 include_once __DIR__ . '/keys.php';
 //include facebook module
 include_once __DIR__ . '/wpfa_fb.php';
+//include our post module
+include_once __DIR__ . '/wpfa_post.php';
 
 
 function wpfa_cron_interval($schedules) {
@@ -124,80 +125,5 @@ function wpfa_name_exists($name) {
     global $wpdb;
     $query = "SELECT ID FROM $wpdb->posts WHERE 1=1 AND post_name LIKE %s";
     return (int) $wpdb->get_var( $wpdb->prepare($query, $name) );
-}
-
-class wpfa_Post{
-    private $id;
-    private $content;
-    private $images;
-    private $category;
-
-    function __construct($post){
-        $this->id = $post['id'];
-        $this->content = $post['content'];
-        $this->images = $post['images'];
-    }
-
-    function set_post_category($category){
-        $this->category = $category;
-    }
-
-    function publish(){
-        //append [gallery] tag if there multiple images to add to the post
-        if (count($this->images) > 1) {
-            $this->content .= '<br> [gallery]';
-        }
-
-        //create the post array
-        $p = array(
-            'post_name' => $this->id,
-            'post_title' => $this->get_title(),
-            'post_content' => $this->content,
-            'post_excerpt' => $this->content
-        );
-        //insert post
-        $post_id = wp_insert_post($p);
-
-        //attach featured image to post
-        if ($this->images){
-            $tmp = download_url($this->images[0]);
-            preg_match('/[^\?]+\.(jpg|jpe|jpeg|gif|png)/i', $this->images[0], $matches);
-            $file = array(
-                'name' => basename($matches[0]),
-                'tmp_name' => $tmp
-            );
-            $attach_id = media_handle_sideload($file, $post_id);
-            add_post_meta($post_id, '_thumbnail_id', $attach_id);
-        }
-
-        //attach additional images to post
-        if (count($this->images) > 1) {
-            //skip duplicating the first image as it is already the featured image
-            for ($i=1; $i < count($this->images); $i++) {
-                media_sideload_image($this->images[$i], $post_id);
-            }
-        }
-
-        //set the post's category
-        $post_categories = array($this->category);
-        wp_set_post_categories($post_id, $post_categories);
-
-        //publish post
-        wp_publish_post($post_id);
-    }
-
-    //strips 4 words from the main content to use as the title
-    function get_title() {
-      //safe strip, handles stuff like commas and dashes
-      preg_match("/(?:[^\s,\.;\?\!]+(?:[\s,\.;\?\!]+|$)){0,4}/", $this->content, $title);
-      //add a trailing ellipsis
-      $title[0] .= "...";
-      //check for a link in the title
-      if (preg_match("/http(s|):\/\/\S+/", $title[0]) === 1)
-      {
-          return 'Shared Link';
-      }
-      return $title[0];
-    }
 }
 ?>
