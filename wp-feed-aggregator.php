@@ -8,6 +8,7 @@ Author: Jay Newton, Shaawin Vsingam
 */
 require_once(ABSPATH . 'wp-admin/includes/media.php');
 require_once(ABSPATH . 'wp-admin/includes/file.php');
+require_once(ABSPATH . 'wp-admin/includes/post.php');
 require_once(ABSPATH . 'wp-admin/includes/image.php');
 require_once(ABSPATH . 'wp-admin/includes/taxonomy.php');
 //include settings
@@ -103,12 +104,15 @@ function wpfa_gen_initial_posts($id){
     $cat_id = wpfa_check_category($fb_page, $id);
     $posts = $fb_page->get_posts($id);
     foreach ($posts as $p) {
-        $post = $fb_page->get_post($p['id']);
-        //only generate posts that we can handle properly
-        if ($post) {
-            $wp_post = new wpfa_Post($post);
-            $wp_post->set_post_category($cat_id);
-            $wp_post->publish();
+        //check if post already exists in wordpress
+        if (!wpfa_name_exists($p['id'])){
+            $post = $fb_page->get_post($p['id']);
+            //only generate posts that we can handle properly
+            if ($post) {
+                $wp_post = new wpfa_Post($post);
+                $wp_post->set_post_category($cat_id);
+                $wp_post->publish();
+            }
         }
     }
 }
@@ -116,6 +120,11 @@ function wpfa_gen_initial_posts($id){
 //Display infromative message to user upon plugin activation
 add_action('admin_notices', 'wpfa_displayWelcome');
 
+function wpfa_name_exists($name) {
+    global $wpdb;
+    $query = "SELECT ID FROM $wpdb->posts WHERE 1=1 AND post_name LIKE %s";
+    return (int) $wpdb->get_var( $wpdb->prepare($query, $name) );
+}
 
 class wpfa_Post{
     private $id;
