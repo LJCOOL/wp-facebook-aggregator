@@ -48,11 +48,20 @@ class wpfa_FbPage{
         return $response->getGraphEdge();
     }
 
+    function get_fb_video_embed($video_id){
+        $request = '/'.$video_id.'?fields=embed_html';
+        $response = $this->call_graph_api($request);
+        $video_object = $response->getGraphNode();
+        return $video_object['embed_html'];
+    }
+
     function get_post($post_id){
         $p['id'] = $post_id;
         $p['images'] = array();
+        $embed_video = NULL;
+        error_log($post_id);
 
-        $request = '/'.$post_id.'?fields=picture,message,status_type';
+        $request = '/'.$post_id.'?fields=picture,message,status_type,object_id';
         $response = $this->call_graph_api($request);
         $post = $response->getGraphNode();
 
@@ -75,6 +84,9 @@ class wpfa_FbPage{
                         break;
                 }
                 break;
+            case 'added_video':
+                $embed_video = $this->get_fb_video_embed($post['object_id']);
+                //no break to allow image to be scraped
             case 'shared_story':
                 //attempt to scrape in image if it exists
                 if ($post['picture']) {
@@ -95,8 +107,16 @@ class wpfa_FbPage{
             return NULL;
         }
 
+        //create post excerpt
+        $p['excerpt'] = $post['message'];
+
         //insert hyperlink tags around links
         $message = preg_replace("/http(s|):\/\/\S+/", '<a href="$0">$0</a>', $post['message']);
+
+        //embed video if one is attached to the post
+        if ($embed_video){
+            $message = $message . '<br><br>' . $embed_video;
+        }
 
         //get the post's text content and append a hyperlink back to facebook
         $fb_link = '<br><br><a href="http://www.facebook.com/'. $post_id .'"><i>View original post on Facebook</i></a>';

@@ -7,12 +7,14 @@ require_once(ABSPATH . 'wp-admin/includes/file.php');
 class wpfa_Post{
     private $id;
     private $content;
+    private $excerpt;
     private $images;
     private $category;
 
     function __construct($post){
         $this->id = $post['id'];
         $this->content = $post['content'];
+        $this->excerpt = $post['excerpt'];
         $this->images = $post['images'];
     }
 
@@ -31,7 +33,7 @@ class wpfa_Post{
             'post_name' => $this->id,
             'post_title' => $this->get_title(),
             'post_content' => $this->content,
-            'post_excerpt' => $this->content
+            'post_excerpt' => $this->excerpt
         );
         //insert post
         $post_id = wp_insert_post($p);
@@ -67,7 +69,7 @@ class wpfa_Post{
     //strips 4 words from the main content to use as the title
     function get_title() {
       //safe strip, handles stuff like commas and dashes
-      preg_match("/(?:[^\s,\.;\?\!]+(?:[\s,\.;\?\!]+|$)){0,4}/", $this->content, $title);
+      preg_match("/(?:[^\s,\.;\?\!]+(?:[\s,\.;\?\!]+|$)){0,4}/", $this->excerpt, $title);
       //add a trailing ellipsis
       $title[0] .= "...";
       //check for a link in the title
