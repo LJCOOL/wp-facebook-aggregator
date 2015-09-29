@@ -1,13 +1,14 @@
 # wp-feed-aggregator
 
-This plugin will generate Wordpress posts based off public Facebook posts retrieved from Facebook pages that have entered by the admin. The generated posts will be automatically added to the same category as other posts that are retrieved from the same Facebook page.
+The WordPress Feed Aggregator Plugin enables users to have posts from multiple (public) Facebook pages added to their existing WordPress blog as a native WordPress post. These generated posts will be automatically added to the same category as other posts that are retrieved from the same Facebook page. The plugin runs on a schedule, a check for new post’s is done every 5 minutes.
 
 ## Current post support
 - Images
 - Text based status updates
 - Status updates with images
-
-The WordPress Feed Aggregator Plugin enables users to have posts from multiple (public) Facebook pages added to their existing WordPress blog as a native WordPress post. The plugin runs on a schedule, a check for new post’s is done every 5 minutes.
+- Albums
+- Shared Links
+- Videos
 
 ## To get started:
 1. Firstly, enable the plugin in the WordPress admin console.
