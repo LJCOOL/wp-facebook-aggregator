@@ -59,7 +59,6 @@ class wpfa_FbPage{
         $p['id'] = $post_id;
         $p['images'] = array();
         $embed_video = NULL;
-        error_log($post_id);
 
         $request = '/'.$post_id.'?fields=picture,message,status_type,object_id';
         $response = $this->call_graph_api($request);
@@ -86,9 +85,12 @@ class wpfa_FbPage{
                 break;
             case 'added_video':
                 $embed_video = $this->get_fb_video_embed($post['object_id']);
-                //no break to allow image to be scraped
+                //scrape image
+                $a = $this->get_attachments($post_id);
+                $p['images'][0] = $a[0]['media']['image']['src'];
+                break;
             case 'shared_story':
-                //attempt to scrape in image if it exists
+                //attempt to scrape an image if it exists
                 if ($post['picture']) {
                     $a = $this->get_attachments($post_id);
                     $p['images'][0] = $a[0]['media']['image']['src'];
@@ -110,8 +112,9 @@ class wpfa_FbPage{
         //create post excerpt
         $p['excerpt'] = $post['message'];
 
-        //insert hyperlink tags around links
-        $message = preg_replace("/http(s|):\/\/\S+/", '<a href="$0">$0</a>', $post['message']);
+        //
+        //insert embed tags around links
+        $message = preg_replace("/http(s|):\/\/\S+/", '[embed]$0[/embed]', $post['message']);
 
         //embed video if one is attached to the post
         if ($embed_video){
