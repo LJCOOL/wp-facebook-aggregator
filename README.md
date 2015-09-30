@@ -23,4 +23,4 @@ The *WordPress Feed Aggregator Plugin* enables users to have posts from multiple
     The plugin will add categories according to the Facebook page names, you may need to account for this if you wish to have this appear as a link somewhere in your page according to the theme you have. Settings for this will be in the theme settings of your selected theme; which is independent of our plugin.
 
 ## Editing and Deleting Posts:
-Remembering that the post’s added are of native WordPress form, this means that the editing or deleting of posts is done is the standard WordPress manner. This can either be done by selecting edit on a specific post (must be logged in with sufficient permissions) or under the ‘Posts’ section in the admin console.
+Remembering that the post’s added are of native WordPress form, this means that the editing or deleting of posts is done in standard WordPress manner. This can either be done by selecting edit on a specific post (must be logged in with sufficient permissions) or under the ‘Posts’ section in the admin console.
