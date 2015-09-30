@@ -11,11 +11,13 @@ add_action('admin_menu', 'feed_options');
 
 function feed_options() {
     //creates a top level menu
-    add_menu_page('WP Feed Aggregator Options',
+    $plugin_page=add_menu_page('WP Feed Aggregator Options',
                   'Feed Aggregator Options',
                   'manage_options',
                   'wpfa-options',
                   'generate_page');
+    //hook to check if settings have changed and act accordingly
+    add_action( 'admin_footer-'. $plugin_page, 'wpfa_checkOptions' );
 }
 
 //defines attributes to be saved

@@ -67,10 +67,4 @@ function wpfa_displayWelcome() {
     }
 }
 
-/* Checks if settings have been changed.
-   Called towards the end of an admin page loading to avoid race condition with
-   options page on plugin activation, added bonus is that errors are inserted
-   into the footer and so doesn't take over the page. */
-add_action('admin_footer','wpfa_checkOptions');
-
 ?>
