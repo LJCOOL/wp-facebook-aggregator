@@ -40,8 +40,9 @@ class wpfa_Post{
 
         //attach featured image to post
         if ($this->images){
-            $tmp = download_url($this->images[0]);
-            preg_match('/[^\?]+\.(jpg|jpe|jpeg|gif|png)/i', $this->images[0], $matches);
+            $url = rawurldecode($this->images[0]);
+            $tmp = download_url($url);
+            preg_match('/[^\?]+\.(jpg|jpe|jpeg|gif|png)/i', $url, $matches);
             $file = array(
                 'name' => basename($matches[0]),
                 'tmp_name' => $tmp

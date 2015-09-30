@@ -60,7 +60,7 @@ class wpfa_FbPage{
         $p['images'] = array();
         $embed_video = NULL;
 
-        $request = '/'.$post_id.'?fields=picture,message,status_type,object_id';
+        $request = '/'.$post_id.'?fields=full_picture,message,status_type,object_id';
         $response = $this->call_graph_api($request);
         $post = $response->getGraphNode();
 
@@ -86,14 +86,12 @@ class wpfa_FbPage{
             case 'added_video':
                 $embed_video = $this->get_fb_video_embed($post['object_id']);
                 //scrape image
-                $a = $this->get_attachments($post_id);
-                $p['images'][0] = $a[0]['media']['image']['src'];
+                $p['images'][0] = $post['full_picture'];
                 break;
             case 'shared_story':
                 //attempt to scrape an image if it exists
-                if ($post['picture']) {
-                    $a = $this->get_attachments($post_id);
-                    $p['images'][0] = $a[0]['media']['image']['src'];
+                if ($post['full_picture']) {
+                    $p['images'][0] = $post['full_picture'];
                 }
                 else {
                     $p['images'] = NULL;
