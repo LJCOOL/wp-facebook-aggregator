@@ -17,7 +17,7 @@ function feed_options() {
                   'wpfa-options',
                   'generate_page');
     //hook to check if settings have changed and act accordingly
-    add_action( 'admin_footer-'. $plugin_page, 'wpfa_checkOptions' );
+    add_action('admin_footer-'. $plugin_page, 'wpfa_checkOptions');
 }
 
 //defines attributes to be saved
@@ -33,22 +33,11 @@ function register_options() {
     register_setting('wpfa-settings','page-ID8');
     register_setting('wpfa-settings','page-ID9');
     register_setting('wpfa-settings','page-ID10');
-    register_setting('wpfa-settings','page-ID11');
-    register_setting('wpfa-settings','page-ID12');
-    register_setting('wpfa-settings','page-ID13');
-    register_setting('wpfa-settings','page-ID14');
-    register_setting('wpfa-settings','page-ID15');
-    register_setting('wpfa-settings','page-ID16');
-    register_setting('wpfa-settings','page-ID17');
-    register_setting('wpfa-settings','page-ID18');
-    register_setting('wpfa-settings','page-ID19');
-    register_setting('wpfa-settings','page-ID20');
 
     //settings for links, videos, images etc
     register_setting('wpfa-settings','wpfa-images');
     register_setting('wpfa-settings','wpfa-links');
     register_setting('wpfa-settings','wpfa-videos');
-    register_setting('wpfa-settings','wpfa-redirect');
 }
 
 //add javascript file to be used by options page
@@ -60,7 +49,7 @@ function wpfa_scripts() {
 //register settings
 add_action('admin_init','register_options');
 //enqueue scripts
-add_action('admin_enqueue_scripts', 'wpfa_scripts');
+//add_action('admin_enqueue_scripts', 'wpfa_scripts');
 
 //HTML to generate page with forms, buttons etc.
 function generate_page() { ?>
@@ -109,10 +98,6 @@ function generate_page() { ?>
         <tr valign="top">
         <th scope="row">Get posts that have videos</th>
         <td><input type="checkbox" name="wpfa-videos" disabled="disabled" checked="checked" value="1" <?php checked( '1', get_option('wpfa-videos') ); ?> /></td>
-        </tr>
-        <tr valign="top">
-        <th scope="row">Redirect featured link to category</th>
-        <td><input type="checkbox" name="wpfa-redirect" disabled="disabled" checked="checked" value="1" <?php checked( '1', get_option('wpfa-redirect') ); ?> /></td>
         </tr>
     </table>
     <?php submit_button(); ?>
