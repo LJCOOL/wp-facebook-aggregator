@@ -18,7 +18,6 @@ function wpfa_generateInitialOptions() {
     update_option('wpfa-images', 1);
     update_option('wpfa-links', 1);
     update_option('wpfa-videos', 1);
-    update_option('wpfa-redirect', 1);
 
     //option to store time of last update
     update_option('wpfa_last_update_time', 0);
