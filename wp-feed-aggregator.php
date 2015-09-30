@@ -2,7 +2,7 @@
 /*
 Plugin Name: Wordpress Feed Aggregator
 Plugin URI: http://github.com/LJCOOL/wp-feed-aggregator
-Description: Pulls and displays posts from multiple Facebook pages.
+Description: The WordPress Feed Aggregator Plugin enables users to have posts from multiple (public) Facebook pages added to their existing WordPress blog as a native WordPress post.
 Version: 1.0.6
 Author: Jay Newton, Shaawin Vsingam
 */
