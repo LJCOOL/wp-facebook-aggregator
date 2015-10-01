@@ -5,12 +5,12 @@ Contains all functions relating to getting and setting options
 
 function wpfa_generateInitialOptions() {
     //instantiate 'variable like' IDs
-    for ($i = 1; $i <=5; $i++ ) {
+    for ($i = 1; $i <=10; $i++ ) {
         update_option("fb_ID$i",'');
     }
 
     //sanitise settings in options menu upon activation
-    for ($i = 1; $i <=5; $i++ ) {
+    for ($i = 1; $i <=10; $i++ ) {
         update_option("page-ID$i",'');
     }
 
@@ -26,7 +26,7 @@ function wpfa_generateInitialOptions() {
 //retrieves list of facebook IDs set by user
 function wpfa_getIDList() {
     $list = array();
-    for ($i = 1; $i <= 5; $i++) {
+    for ($i = 1; $i <= 10; $i++) {
       if (get_option("page-ID$i") != '')
           array_push($list,get_option("page-ID$i"));
     }
@@ -35,7 +35,7 @@ function wpfa_getIDList() {
 
 //checks if settings have changed
 function wpfa_checkOptions() {
-    for ($i = 1; $i <=5; $i++ ) {
+    for ($i = 1; $i <=10; $i++ ) {
         // if the 'local' ID is different from what's in the settings and not empty
         $setID = get_option("page-ID$i");
         if ($setID != get_option("fb_ID$i") && $setID != '') {
